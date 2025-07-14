@@ -72,91 +72,79 @@ include 'includes/header.php';
                     <div class="bg-white rounded-lg shadow p-6 text-center">
                         <div class="flex items-center justify-center mb-4">
                             <div class="p-3 rounded-full bg-yellow-100">
-                                        <i class="fas fa-clock text-warning fs-4"></i>
-                                    </div>
-                                </div>
-                                <h6 class="card-title text-muted">รอการอนุมัติ</h6>
-                                <h2 class="card-text text-dark"><?php echo number_format($statistics['pending_requests']); ?></h2>
+                                <i class="fas fa-clock text-yellow-600 text-xl"></i>
                             </div>
                         </div>
+                        <h6 class="text-sm text-gray-600 mb-2">รอการอนุมัติ</h6>
+                        <h2 class="text-2xl font-bold text-gray-900"><?php echo number_format($statistics['pending_requests']); ?></h2>
                     </div>
 
-                    <div class="col-md-3">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center justify-content-center mb-3">
-                                    <div class="p-3 rounded-circle bg-success bg-opacity-10">
-                                        <i class="fas fa-check-circle text-success fs-4"></i>
-                                    </div>
-                                </div>
-                                <h6 class="card-title text-muted">อนุมัติแล้ว</h6>
-                                <h2 class="card-text text-dark"><?php echo number_format($statistics['approved_requests']); ?></h2>
+                    <div class="bg-white rounded-lg shadow p-6 text-center">
+                        <div class="flex items-center justify-center mb-4">
+                            <div class="p-3 rounded-full bg-green-100">
+                                <i class="fas fa-check-circle text-green-600 text-xl"></i>
                             </div>
                         </div>
+                        <h6 class="text-sm text-gray-600 mb-2">อนุมัติแล้ว</h6>
+                        <h2 class="text-2xl font-bold text-gray-900"><?php echo number_format($statistics['approved_requests']); ?></h2>
                     </div>
 
-                    <div class="col-md-3">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center justify-content-center mb-3">
-                                    <div class="p-3 rounded-circle bg-danger bg-opacity-10">
-                                        <i class="fas fa-times-circle text-danger fs-4"></i>
-                                    </div>
-                                </div>
-                                <h6 class="card-title text-muted">ปฏิเสธ</h6>
-                                <h2 class="card-text text-dark"><?php echo number_format($statistics['rejected_requests']); ?></h2>
+                    <div class="bg-white rounded-lg shadow p-6 text-center">
+                        <div class="flex items-center justify-center mb-4">
+                            <div class="p-3 rounded-full bg-red-100">
+                                <i class="fas fa-times-circle text-red-600 text-xl"></i>
                             </div>
                         </div>
+                        <h6 class="text-sm text-gray-600 mb-2">ปฏิเสธ</h6>
+                        <h2 class="text-2xl font-bold text-gray-900"><?php echo number_format($statistics['rejected_requests']); ?></h2>
                     </div>
                 </div>
 
                 <!-- Recent Requests -->
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">คำขอล่าสุด</h5>
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h5 class="text-lg font-semibold text-gray-900">คำขอล่าสุด</h5>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>เลขที่คำขอ</th>
-                                        <th>รายการ</th>
-                                        <th>แผนก</th>
-                                        <th>จำนวนเงิน</th>
-                                        <th>สถานะ</th>
-                                        <th>วันที่</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php 
-                                    $count = 0;
-                                    while ($row = $recent_requests->fetch(PDO::FETCH_ASSOC)) : 
-                                        if ($count >= 10) break;
-                                        $count++;
-                                        
-                                        $status = new Status($db);
-                                        $status_class = $status->getStatusBadgeClass($row['status_name']);
-                                        $status_text = $status->getStatusTranslation($row['status_name']);
-                                    ?>
-                                    <tr>
-                                        <td>
-                                            <span class="fw-semibold"><?php echo htmlspecialchars($row['request_number']); ?></span>
-                                        </td>
-                                        <td><?php echo htmlspecialchars($row['item_name']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['department_name']); ?></td>
-                                        <td>฿<?php echo number_format($row['total_price'], 2); ?></td>
-                                        <td>
-                                            <span class="badge <?php echo $status_class; ?>">
-                                                <?php echo $status_text; ?>
-                                            </span>
-                                        </td>
-                                        <td><?php echo formatThaiDate($row['created_at']); ?></td>
-                                    </tr>
-                                    <?php endwhile; ?>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="overflow-x-auto">
+                        <table id="recent-requests-table" class="data-table min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">เลขที่คำขอ</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">รายการ</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">แผนก</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">จำนวนเงิน</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">สถานะ</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">วันที่</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <?php 
+                                $count = 0;
+                                while ($row = $recent_requests->fetch(PDO::FETCH_ASSOC)) : 
+                                    if ($count >= 10) break;
+                                    $count++;
+                                    
+                                    $status = new Status($db);
+                                    $status_class = $status->getStatusBadgeClass($row['status_name']);
+                                    $status_text = $status->getStatusTranslation($row['status_name']);
+                                ?>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        <?php echo htmlspecialchars($row['request_number']); ?>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo htmlspecialchars($row['item_name']); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo htmlspecialchars($row['department_name']); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">฿<?php echo number_format($row['total_price'], 2); ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo $status_class; ?>">
+                                            <?php echo $status_text; ?>
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo formatThaiDate($row['created_at']); ?></td>
+                                </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
