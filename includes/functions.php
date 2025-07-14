@@ -2,18 +2,18 @@
 session_start();
 
 // Include database connection
-require_once 'config/database.php';
+require_once __DIR__ . '/../config/database_sqlite.php';
 
 // Include models
-require_once 'models/User.php';
-require_once 'models/Role.php';
-require_once 'models/Department.php';
-require_once 'models/Item.php';
-require_once 'models/BudgetYear.php';
-require_once 'models/ProcurementRequest.php';
-require_once 'models/Status.php';
-require_once 'models/Attachment.php';
-require_once 'models/ActivityLog.php';
+require_once __DIR__ . '/../models/User.php';
+require_once __DIR__ . '/../models/Role.php';
+require_once __DIR__ . '/../models/Department.php';
+require_once __DIR__ . '/../models/Item.php';
+require_once __DIR__ . '/../models/BudgetYear.php';
+require_once __DIR__ . '/../models/ProcurementRequest.php';
+require_once __DIR__ . '/../models/Status.php';
+require_once __DIR__ . '/../models/Attachment.php';
+require_once __DIR__ . '/../models/ActivityLog.php';
 
 // Security functions
 function sanitizeInput($input) {
