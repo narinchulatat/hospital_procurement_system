@@ -62,7 +62,7 @@ $next_statuses = $status->getNextStatuses($request_data['status_id']);
 
 $page_title = 'รายละเอียดคำขอ';
 $base_url = '';
-include 'includes/header.php';
+include 'includes/sidebar.php';
 ?>
 
     <!-- Main Content -->
@@ -502,4 +502,3 @@ include 'includes/header.php';
         <?php endif; ?>
     </script>
 
-<?php include 'includes/footer.php'; ?>

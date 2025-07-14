@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_name'])) {
 
 $page_title = 'Dashboard (Responsive Demo)';
 $base_url = '';
-include 'includes/header.php';
+include 'includes/sidebar.php';
 ?>
 
 <!-- Page Header -->
@@ -147,4 +147,3 @@ include 'includes/header.php';
     </div>
 </div>
 
-<?php include 'includes/footer.php'; ?>

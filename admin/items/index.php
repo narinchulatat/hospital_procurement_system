@@ -33,7 +33,7 @@ $budget_years = $budget_year->readAll();
 // Set base URL for admin pages
 $base_url = '../../';
 ?>
-<?php include '../../includes/header.php'; ?>
+<?php include '../../includes/sidebar.php'; ?>
 
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center mb-6">
@@ -186,4 +186,3 @@ $base_url = '../../';
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.tailwindcss.min.js"></script>
     <script src="../../js/main.js"></script>
 
-<?php include '../../includes/footer.php'; ?>

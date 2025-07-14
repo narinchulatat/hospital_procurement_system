@@ -21,7 +21,7 @@ $departments = $department->readAll();
 
 $page_title = 'จัดการผู้ใช้งาน';
 $base_url = '';
-include 'includes/header.php';
+include 'includes/sidebar.php';
 ?>
         <!-- Header -->
         <div class="mb-6">
@@ -282,4 +282,3 @@ include 'includes/header.php';
         <?php endif; ?>
     </script>
 
-<?php include 'includes/footer.php'; ?>

@@ -11,7 +11,7 @@ $_SESSION['user_role'] = 'admin';
 $_SESSION['department_id'] = 1;
 $_SESSION['department_name'] = 'IT Department';
 
-include 'includes/header.php';
+include 'includes/sidebar.php';
 ?>
                 <!-- Header -->
                 <div class="mb-6">
@@ -140,4 +140,3 @@ include 'includes/header.php';
                     </div>
                 </div>
 
-<?php include 'includes/footer.php'; ?>
