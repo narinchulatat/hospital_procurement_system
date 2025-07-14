@@ -30,7 +30,9 @@ $page_title = 'จัดการผู้ใช้งาน';
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.4/css/dataTables.tailwindcss.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="css/style.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Sarabun', sans-serif;
@@ -63,7 +65,7 @@ $page_title = 'จัดการผู้ใช้งาน';
                 <h3 class="text-lg font-semibold text-gray-900">รายชื่อผู้ใช้งาน</h3>
             </div>
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
+                <table id="users-table" class="data-table min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ชื่อผู้ใช้งาน</th>
@@ -72,7 +74,7 @@ $page_title = 'จัดการผู้ใช้งาน';
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">แผนก</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">สถานะ</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">เข้าใช้งานล่าสุด</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">การดำเนินการ</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider no-sort">การดำเนินการ</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -101,15 +103,15 @@ $page_title = 'จัดการผู้ใช้งาน';
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex items-center space-x-2">
                                     <button onclick="editUser(<?php echo $user_row['id']; ?>)" 
-                                            class="text-blue-600 hover:text-blue-900">
+                                            class="text-blue-600 hover:text-blue-900" title="แก้ไข">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button onclick="toggleUserStatus(<?php echo $user_row['id']; ?>, <?php echo $user_row['is_active'] ? 'false' : 'true'; ?>)" 
-                                            class="text-orange-600 hover:text-orange-900">
+                                            class="text-orange-600 hover:text-orange-900" title="<?php echo $user_row['is_active'] ? 'ปิดใช้งาน' : 'เปิดใช้งาน'; ?>">
                                         <i class="fas fa-<?php echo $user_row['is_active'] ? 'ban' : 'check'; ?>"></i>
                                     </button>
                                     <button onclick="resetPassword(<?php echo $user_row['id']; ?>)" 
-                                            class="text-green-600 hover:text-green-900">
+                                            class="text-green-600 hover:text-green-900" title="รีเซ็ตรหัสผ่าน">
                                         <i class="fas fa-key"></i>
                                     </button>
                                 </div>
@@ -121,6 +123,11 @@ $page_title = 'จัดการผู้ใช้งาน';
             </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.tailwindcss.min.js"></script>
+    <script src="js/main.js"></script>
 
     <script>
         function addUser() {
