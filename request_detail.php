@@ -61,26 +61,9 @@ $status = new Status($db);
 $next_statuses = $status->getNextStatuses($request_data['status_id']);
 
 $page_title = 'รายละเอียดคำขอ';
+$base_url = '';
+include 'includes/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $page_title; ?> - ระบบจัดซื้อครุภัณฑ์คอมพิวเตอร์</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        body {
-            font-family: 'Sarabun', sans-serif;
-        }
-    </style>
-</head>
-<body class="bg-gray-100">
-    <!-- Navigation -->
-    <?php include 'includes/navbar.php'; ?>
 
     <!-- Main Content -->
     <div class="max-w-6xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -518,5 +501,5 @@ $page_title = 'รายละเอียดคำขอ';
             <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
     </script>
-</body>
-</html>
+
+<?php include 'includes/footer.php'; ?>
