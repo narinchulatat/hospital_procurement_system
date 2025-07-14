@@ -50,6 +50,118 @@ function output_layout() {
         .sidebar-mobile.active {
             transform: translateX(0);
         }
+        
+        /* Modern sidebar enhancements */
+        .sidebar-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .sidebar-nav-item {
+            position: relative;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .sidebar-nav-item:hover {
+            transform: translateX(4px);
+        }
+        
+        .sidebar-nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transform: scaleY(0);
+            transition: transform 0.2s ease-in-out;
+        }
+        
+        .sidebar-nav-item:hover::before,
+        .sidebar-nav-item.active::before {
+            transform: scaleY(1);
+        }
+        
+        .sidebar-nav-icon {
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .sidebar-nav-item:hover .sidebar-nav-icon {
+            transform: scale(1.1);
+        }
+        
+        .sidebar-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .sidebar-group::after {
+            content: '';
+            position: absolute;
+            bottom: -0.75rem;
+            left: 1rem;
+            right: 1rem;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        }
+        
+        .sidebar-user-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .nav-badge {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .sidebar-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grain)"/></svg>');
+            opacity: 0.1;
+        }
+        
+        .mobile-menu-animation {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .nav-text {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .collapsible-section {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+        
+        .collapsible-section.open {
+            max-height: 500px;
+        }
     </style>
     <meta name="csrf-token" content="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
 </head>
@@ -107,111 +219,173 @@ function output_layout() {
     <!-- Main container -->
     <div class="flex">
         <!-- Sidebar -->
-        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0" id="sidebar">
+        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0" id="sidebar">
             <!-- Mobile header -->
-            <div class="flex items-center justify-between h-16 bg-gradient-to-r from-blue-600 to-blue-700 px-4 lg:hidden">
-                <div class="flex items-center text-white">
-                    <i class="fas fa-hospital text-xl mr-2"></i>
-                    <span class="font-semibold">Hospital Procurement System</span>
+            <div class="flex items-center justify-between h-16 sidebar-header px-4 lg:hidden">
+                <div class="flex items-center text-white relative z-10">
+                    <div class="p-2 bg-white bg-opacity-20 rounded-lg mr-3">
+                        <i class="fas fa-hospital text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold text-lg">Hospital System</div>
+                        <div class="text-sm text-blue-100">Procurement</div>
+                    </div>
                 </div>
-                <button class="text-white hover:text-gray-200 transition-colors" onclick="document.getElementById('sidebar-overlay').click()">
+                <button class="text-white hover:text-gray-200 transition-colors relative z-10" onclick="document.getElementById('sidebar-overlay').click()">
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
             
-            <!-- Desktop logo -->
-            <div class="hidden lg:flex items-center justify-center h-16 bg-gradient-to-r from-blue-600 to-blue-700 border-b border-blue-500">
-                <div class="flex items-center text-white">
-                    <i class="fas fa-hospital text-2xl mr-3"></i>
-                    <div class="text-center">
-                        <div class="font-bold text-lg">Hospital</div>
-                        <div class="text-sm text-blue-200">Procurement System</div>
+            <!-- Desktop header -->
+            <div class="hidden lg:block sidebar-header">
+                <div class="flex items-center justify-center h-20 px-4 relative z-10">
+                    <div class="flex items-center text-white">
+                        <div class="p-3 bg-white bg-opacity-20 rounded-xl mr-3 shadow-lg">
+                            <i class="fas fa-hospital text-2xl"></i>
+                        </div>
+                        <div class="text-center">
+                            <div class="font-bold text-xl">Hospital</div>
+                            <div class="text-sm text-blue-100 font-medium">Procurement System</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- User Profile Card -->
+            <div class="px-4 py-6">
+                <div class="sidebar-user-card rounded-xl p-4 mb-6">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                            <?php echo strtoupper(substr($_SESSION['user_name'], 0, 1)); ?>
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <div class="font-semibold text-gray-800 text-sm"><?php echo $_SESSION['user_name']; ?></div>
+                            <div class="text-xs text-gray-500 capitalize"><?php echo $_SESSION['user_role']; ?></div>
+                        </div>
+                        <div class="w-3 h-3 bg-green-400 rounded-full shadow-sm"></div>
                     </div>
                 </div>
             </div>
             
             <!-- Navigation -->
-            <nav class="mt-5 px-3 space-y-1 h-full overflow-y-auto">
-                <!-- Dashboard -->
-                <a href="<?php echo $base_url; ?>dashboard.php" 
-                   class="<?php echo basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'bg-blue-100 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200">
-                    <i class="fas fa-chart-line <?php echo basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5"></i>
-                    <span>📊 Dashboard</span>
-                </a>
-                
-                <!-- ยื่นคำขอใหม่ - for staff and department_head -->
-                <?php if ($_SESSION['user_role'] == 'staff' || $_SESSION['user_role'] == 'department_head'): ?>
-                <a href="<?php echo $base_url; ?>request_form.php" 
-                   class="<?php echo basename($_SERVER['PHP_SELF']) == 'request_form.php' ? 'bg-blue-100 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200">
-                    <i class="fas fa-plus-circle <?php echo basename($_SERVER['PHP_SELF']) == 'request_form.php' ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5"></i>
-                    <span>🟢 ยื่นคำขอใหม่</span>
-                </a>
-                <?php endif; ?>
-                
-                <!-- รายการคำขอ -->
-                <a href="<?php echo $base_url; ?>requests.php" 
-                   class="<?php echo basename($_SERVER['PHP_SELF']) == 'requests.php' ? 'bg-blue-100 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200">
-                    <i class="fas fa-list-alt <?php echo basename($_SERVER['PHP_SELF']) == 'requests.php' ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5"></i>
-                    <span>📋 รายการคำขอ</span>
-                </a>
-                
-                <!-- อนุมัติคำขอ - for department_head and admin -->
-                <?php if ($_SESSION['user_role'] == 'department_head' || $_SESSION['user_role'] == 'admin'): ?>
-                <a href="<?php echo $base_url; ?>approve_request.php" 
-                   class="<?php echo basename($_SERVER['PHP_SELF']) == 'approve_request.php' ? 'bg-green-100 text-green-700 border-r-4 border-green-500' : 'text-gray-600 hover:bg-green-50 hover:text-green-700'; ?> group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200">
-                    <i class="fas fa-check-circle <?php echo basename($_SERVER['PHP_SELF']) == 'approve_request.php' ? 'text-green-500' : 'text-gray-400 group-hover:text-green-500'; ?> mr-3 w-5"></i>
-                    <span>✅ อนุมัติคำขอ</span>
-                </a>
-                <?php endif; ?>
+            <nav class="px-3 space-y-2 h-full overflow-y-auto pb-6">
+                <!-- Main Navigation Group -->
+                <div class="sidebar-group">
+                    <div class="px-3 mb-3">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">หลัก</span>
+                    </div>
+                    
+                    <!-- Dashboard -->
+                    <a href="<?php echo $base_url; ?>dashboard.php" 
+                       class="sidebar-nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-3 text-sm font-medium rounded-xl transition-all duration-200">
+                        <div class="sidebar-nav-icon <?php echo basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5 h-5 flex items-center justify-center">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                    
+                    <!-- ยื่นคำขอใหม่ - for staff and department_head -->
+                    <?php if ($_SESSION['user_role'] == 'staff' || $_SESSION['user_role'] == 'department_head'): ?>
+                    <a href="<?php echo $base_url; ?>request_form.php" 
+                       class="sidebar-nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'request_form.php' ? 'active bg-gradient-to-r from-green-50 to-blue-50 text-green-700 border-r-4 border-green-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-3 text-sm font-medium rounded-xl transition-all duration-200">
+                        <div class="sidebar-nav-icon <?php echo basename($_SERVER['PHP_SELF']) == 'request_form.php' ? 'text-green-500' : 'text-gray-400 group-hover:text-green-500'; ?> mr-3 w-5 h-5 flex items-center justify-center">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <span class="nav-text">ยื่นคำขอใหม่</span>
+                        <span class="nav-badge ml-auto px-2 py-1 text-xs text-white rounded-full shadow-sm">New</span>
+                    </a>
+                    <?php endif; ?>
+                    
+                    <!-- รายการคำขอ -->
+                    <a href="<?php echo $base_url; ?>requests.php" 
+                       class="sidebar-nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'requests.php' ? 'active bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-3 text-sm font-medium rounded-xl transition-all duration-200">
+                        <div class="sidebar-nav-icon <?php echo basename($_SERVER['PHP_SELF']) == 'requests.php' ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5 h-5 flex items-center justify-center">
+                            <i class="fas fa-list-alt"></i>
+                        </div>
+                        <span class="nav-text">รายการคำขอ</span>
+                    </a>
+                    
+                    <!-- อนุมัติคำขอ - for department_head and admin -->
+                    <?php if ($_SESSION['user_role'] == 'department_head' || $_SESSION['user_role'] == 'admin'): ?>
+                    <a href="<?php echo $base_url; ?>approve_request.php" 
+                       class="sidebar-nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'approve_request.php' ? 'active bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border-r-4 border-green-500' : 'text-gray-600 hover:bg-green-50 hover:text-green-700'; ?> group flex items-center px-3 py-3 text-sm font-medium rounded-xl transition-all duration-200">
+                        <div class="sidebar-nav-icon <?php echo basename($_SERVER['PHP_SELF']) == 'approve_request.php' ? 'text-green-500' : 'text-gray-400 group-hover:text-green-500'; ?> mr-3 w-5 h-5 flex items-center justify-center">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <span class="nav-text">อนุมัติคำขอ</span>
+                        <span class="nav-badge ml-auto px-2 py-1 text-xs text-white rounded-full shadow-sm">3</span>
+                    </a>
+                    <?php endif; ?>
+                </div>
                 
                 <!-- จัดการระบบ - for admin only -->
                 <?php if ($_SESSION['user_role'] == 'admin'): ?>
-                <div class="pt-4 pb-6">
-                    <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                        📁 จัดการระบบ
-                    </h3>
+                <div class="sidebar-group">
+                    <div class="px-3 mb-3">
+                        <button class="flex items-center justify-between w-full text-xs font-semibold text-gray-400 uppercase tracking-wider hover:text-gray-600 transition-colors" 
+                                onclick="toggleAdminSection()">
+                            <span>จัดการระบบ</span>
+                            <i class="fas fa-chevron-down transition-transform duration-200" id="admin-chevron"></i>
+                        </button>
+                    </div>
                     
-                    <a href="<?php echo $base_url; ?>admin/users/" 
-                       class="<?php echo strpos($_SERVER['PHP_SELF'], '/admin/users/') !== false ? 'bg-blue-100 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200">
-                        <i class="fas fa-users <?php echo strpos($_SERVER['PHP_SELF'], '/admin/users/') !== false ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5"></i>
-                        <span>👥 ผู้ใช้งาน</span>
-                    </a>
-                    
-                    <a href="<?php echo $base_url; ?>admin/departments/" 
-                       class="<?php echo strpos($_SERVER['PHP_SELF'], '/admin/departments/') !== false ? 'bg-blue-100 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200">
-                        <i class="fas fa-building <?php echo strpos($_SERVER['PHP_SELF'], '/admin/departments/') !== false ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5"></i>
-                        <span>🏢 แผนก</span>
-                    </a>
-                    
-                    <a href="<?php echo $base_url; ?>admin/items/" 
-                       class="<?php echo strpos($_SERVER['PHP_SELF'], '/admin/items/') !== false ? 'bg-blue-100 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200">
-                        <i class="fas fa-laptop <?php echo strpos($_SERVER['PHP_SELF'], '/admin/items/') !== false ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5"></i>
-                        <span>📦 รายการครุภัณฑ์</span>
-                    </a>
-                    
-                    <a href="<?php echo $base_url; ?>admin/roles/" 
-                       class="<?php echo strpos($_SERVER['PHP_SELF'], '/admin/roles/') !== false ? 'bg-blue-100 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200">
-                        <i class="fas fa-user-tag <?php echo strpos($_SERVER['PHP_SELF'], '/admin/roles/') !== false ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5"></i>
-                        <span>🏷️ บทบาท</span>
-                    </a>
-                    
-                    <a href="<?php echo $base_url; ?>admin/status/" 
-                       class="<?php echo strpos($_SERVER['PHP_SELF'], '/admin/status/') !== false ? 'bg-blue-100 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200">
-                        <i class="fas fa-flag <?php echo strpos($_SERVER['PHP_SELF'], '/admin/status/') !== false ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5"></i>
-                        <span>📊 สถานะ</span>
-                    </a>
-                    
-                    <a href="<?php echo $base_url; ?>admin/budget_years/" 
-                       class="<?php echo strpos($_SERVER['PHP_SELF'], '/admin/budget_years/') !== false ? 'bg-blue-100 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200">
-                        <i class="fas fa-calendar-alt <?php echo strpos($_SERVER['PHP_SELF'], '/admin/budget_years/') !== false ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5"></i>
-                        <span>💰 ปีงบประมาณ</span>
-                    </a>
-                    
-                    <a href="<?php echo $base_url; ?>admin/reports/" 
-                       class="<?php echo strpos($_SERVER['PHP_SELF'], '/admin/reports/') !== false ? 'bg-blue-100 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200">
-                        <i class="fas fa-chart-bar <?php echo strpos($_SERVER['PHP_SELF'], '/admin/reports/') !== false ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5"></i>
-                        <span>📈 รายงาน</span>
-                    </a>
+                    <div class="collapsible-section open" id="admin-section">
+                        <a href="<?php echo $base_url; ?>admin/users/" 
+                           class="sidebar-nav-item <?php echo strpos($_SERVER['PHP_SELF'], '/admin/users/') !== false ? 'active bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-3 text-sm font-medium rounded-xl transition-all duration-200">
+                            <div class="sidebar-nav-icon <?php echo strpos($_SERVER['PHP_SELF'], '/admin/users/') !== false ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5 h-5 flex items-center justify-center">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <span class="nav-text">ผู้ใช้งาน</span>
+                        </a>
+                        
+                        <a href="<?php echo $base_url; ?>admin/departments/" 
+                           class="sidebar-nav-item <?php echo strpos($_SERVER['PHP_SELF'], '/admin/departments/') !== false ? 'active bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-3 text-sm font-medium rounded-xl transition-all duration-200">
+                            <div class="sidebar-nav-icon <?php echo strpos($_SERVER['PHP_SELF'], '/admin/departments/') !== false ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5 h-5 flex items-center justify-center">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <span class="nav-text">แผนก</span>
+                        </a>
+                        
+                        <a href="<?php echo $base_url; ?>admin/items/" 
+                           class="sidebar-nav-item <?php echo strpos($_SERVER['PHP_SELF'], '/admin/items/') !== false ? 'active bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-3 text-sm font-medium rounded-xl transition-all duration-200">
+                            <div class="sidebar-nav-icon <?php echo strpos($_SERVER['PHP_SELF'], '/admin/items/') !== false ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5 h-5 flex items-center justify-center">
+                                <i class="fas fa-laptop"></i>
+                            </div>
+                            <span class="nav-text">รายการครุภัณฑ์</span>
+                        </a>
+                        
+                        <a href="<?php echo $base_url; ?>admin/roles/" 
+                           class="sidebar-nav-item <?php echo strpos($_SERVER['PHP_SELF'], '/admin/roles/') !== false ? 'active bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-3 text-sm font-medium rounded-xl transition-all duration-200">
+                            <div class="sidebar-nav-icon <?php echo strpos($_SERVER['PHP_SELF'], '/admin/roles/') !== false ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5 h-5 flex items-center justify-center">
+                                <i class="fas fa-user-tag"></i>
+                            </div>
+                            <span class="nav-text">บทบาท</span>
+                        </a>
+                        
+                        <a href="<?php echo $base_url; ?>admin/status/" 
+                           class="sidebar-nav-item <?php echo strpos($_SERVER['PHP_SELF'], '/admin/status/') !== false ? 'active bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-3 text-sm font-medium rounded-xl transition-all duration-200">
+                            <div class="sidebar-nav-icon <?php echo strpos($_SERVER['PHP_SELF'], '/admin/status/') !== false ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5 h-5 flex items-center justify-center">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <span class="nav-text">สถานะ</span>
+                        </a>
+                        
+                        <a href="<?php echo $base_url; ?>admin/budget_years/" 
+                           class="sidebar-nav-item <?php echo strpos($_SERVER['PHP_SELF'], '/admin/budget_years/') !== false ? 'active bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-3 text-sm font-medium rounded-xl transition-all duration-200">
+                            <div class="sidebar-nav-icon <?php echo strpos($_SERVER['PHP_SELF'], '/admin/budget_years/') !== false ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5 h-5 flex items-center justify-center">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <span class="nav-text">ปีงบประมาณ</span>
+                        </a>
+                        
+                        <a href="<?php echo $base_url; ?>admin/reports/" 
+                           class="sidebar-nav-item <?php echo strpos($_SERVER['PHP_SELF'], '/admin/reports/') !== false ? 'active bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 border-r-4 border-blue-500' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'; ?> group flex items-center px-3 py-3 text-sm font-medium rounded-xl transition-all duration-200">
+                            <div class="sidebar-nav-icon <?php echo strpos($_SERVER['PHP_SELF'], '/admin/reports/') !== false ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'; ?> mr-3 w-5 h-5 flex items-center justify-center">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <span class="nav-text">รายงาน</span>
+                        </a>
+                    </div>
                 </div>
                 <?php endif; ?>
             </nav>
@@ -465,12 +639,45 @@ function output_layout() {
                 sidebar.classList.remove('-translate-x-full');
                 sidebar.classList.add('translate-x-0');
                 overlay.classList.remove('hidden');
+                sidebar.classList.add('mobile-menu-animation');
             } else {
                 sidebar.classList.add('-translate-x-full');
                 sidebar.classList.remove('translate-x-0');
                 overlay.classList.add('hidden');
+                sidebar.classList.remove('mobile-menu-animation');
             }
         }
+        
+        // Toggle admin section
+        function toggleAdminSection() {
+            const section = document.getElementById('admin-section');
+            const chevron = document.getElementById('admin-chevron');
+            
+            if (section.classList.contains('open')) {
+                section.classList.remove('open');
+                chevron.style.transform = 'rotate(-90deg)';
+            } else {
+                section.classList.add('open');
+                chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+        
+        // Add hover effects to navigation items
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.sidebar-nav-item');
+            
+            navItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(4px)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    if (!this.classList.contains('active')) {
+                        this.style.transform = 'translateX(0)';
+                    }
+                });
+            });
+        });
         
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
