@@ -196,5 +196,91 @@ class Item {
         $stmt->execute();
         return $stmt;
     }
+
+    public function readAllWithPagination($search = '', $category = '', $budget_year_id = '', $perPage = 10, $offset = 0) {
+        // Base query for counting
+        $countQuery = "SELECT COUNT(*) as total FROM " . $this->table_name . " i
+                      LEFT JOIN budget_years b ON i.budget_year_id = b.id";
+        
+        // Base query for data
+        $dataQuery = "SELECT i.*, b.year_be, b.year_ad 
+                      FROM " . $this->table_name . " i
+                      LEFT JOIN budget_years b ON i.budget_year_id = b.id";
+        
+        $whereClause = "";
+        $params = [];
+        $conditions = [];
+        
+        if (!empty($search)) {
+            $conditions[] = "(i.name LIKE :search OR i.code LIKE :search OR i.description LIKE :search)";
+            $params[':search'] = "%$search%";
+        }
+        
+        if (!empty($category)) {
+            $conditions[] = "i.category = :category";
+            $params[':category'] = $category;
+        }
+        
+        if (!empty($budget_year_id)) {
+            $conditions[] = "i.budget_year_id = :budget_year_id";
+            $params[':budget_year_id'] = $budget_year_id;
+        }
+        
+        if (!empty($conditions)) {
+            $whereClause = " WHERE " . implode(' AND ', $conditions);
+        }
+        
+        // Get total count
+        $countStmt = $this->conn->prepare($countQuery . $whereClause);
+        foreach ($params as $key => $value) {
+            $countStmt->bindValue($key, $value);
+        }
+        $countStmt->execute();
+        $total = $countStmt->fetch(PDO::FETCH_ASSOC)['total'];
+        
+        // Get data with pagination
+        $dataQuery .= $whereClause . " ORDER BY i.category, i.name LIMIT :offset, :per_page";
+        $dataStmt = $this->conn->prepare($dataQuery);
+        
+        foreach ($params as $key => $value) {
+            $dataStmt->bindValue($key, $value);
+        }
+        $dataStmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $dataStmt->bindValue(':per_page', $perPage, PDO::PARAM_INT);
+        $dataStmt->execute();
+        
+        return [
+            'data' => $dataStmt,
+            'total' => $total
+        ];
+    }
+
+    public function checkCodeExists($code, $excludeId = null) {
+        $query = "SELECT id FROM " . $this->table_name . " WHERE code = :code";
+        if ($excludeId) {
+            $query .= " AND id != :exclude_id";
+        }
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':code', $code);
+        if ($excludeId) {
+            $stmt->bindParam(':exclude_id', $excludeId);
+        }
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
+    }
+
+    public function checkNameExists($name, $excludeId = null) {
+        $query = "SELECT id FROM " . $this->table_name . " WHERE name = :name";
+        if ($excludeId) {
+            $query .= " AND id != :exclude_id";
+        }
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':name', $name);
+        if ($excludeId) {
+            $stmt->bindParam(':exclude_id', $excludeId);
+        }
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
+    }
 }
 ?>
