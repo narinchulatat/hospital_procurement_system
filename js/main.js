@@ -1,5 +1,8 @@
 // Hospital Procurement System - Main JavaScript
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize DataTables for all tables with class 'data-table'
+    initializeDataTables();
+    
     // Mobile menu toggle
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const sidebar = document.getElementById('sidebar');
@@ -74,24 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Search functionality
-    const searchInput = document.getElementById('search-input');
-    if (searchInput) {
-        searchInput.addEventListener('input', debounce(function() {
-            const searchTerm = this.value.toLowerCase();
-            const tableRows = document.querySelectorAll('tbody tr');
-            
-            tableRows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }, 300));
-    }
-    
     // Auto-hide alerts
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(alert => {
@@ -110,6 +95,150 @@ document.addEventListener('DOMContentLoaded', function() {
         tooltip.addEventListener('mouseleave', hideTooltip);
     });
 });
+
+// DataTables initialization function
+function initializeDataTables() {
+    // Check if DataTables is available
+    if (typeof $.fn.DataTable !== 'undefined') {
+        const dataTables = document.querySelectorAll('.data-table');
+        
+        dataTables.forEach(table => {
+            const tableId = table.getAttribute('id') || 'table_' + Math.random().toString(36).substr(2, 9);
+            table.setAttribute('id', tableId);
+            
+            // Get configuration from data attributes
+            const config = {
+                responsive: true,
+                processing: true,
+                language: {
+                    search: 'ค้นหา:',
+                    lengthMenu: 'แสดง _MENU_ รายการต่อหน้า',
+                    info: 'แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ',
+                    infoEmpty: 'ไม่มีข้อมูล',
+                    infoFiltered: '(กรองจากทั้งหมด _MAX_ รายการ)',
+                    paginate: {
+                        first: 'หน้าแรก',
+                        last: 'หน้าสุดท้าย',
+                        next: 'ถัดไป',
+                        previous: 'ก่อนหน้า'
+                    },
+                    processing: 'กำลังประมวลผล...',
+                    emptyTable: 'ไม่มีข้อมูลในตาราง',
+                    zeroRecords: 'ไม่พบข้อมูลที่ค้นหา'
+                },
+                pageLength: parseInt(table.getAttribute('data-page-length')) || 10,
+                order: [],
+                columnDefs: [
+                    {
+                        targets: 'no-sort',
+                        orderable: false
+                    }
+                ],
+                dom: '<"flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4"<"mb-2 sm:mb-0"l><"mb-2 sm:mb-0"f>>t<"flex flex-col sm:flex-row sm:items-center sm:justify-between mt-4"<"mb-2 sm:mb-0"i><"mb-2 sm:mb-0"p>>',
+                drawCallback: function(settings) {
+                    // Apply Tailwind classes to pagination buttons
+                    const wrapper = document.getElementById(tableId + '_wrapper');
+                    if (wrapper) {
+                        const paginateButtons = wrapper.querySelectorAll('.paginate_button');
+                        paginateButtons.forEach(button => {
+                            button.classList.remove('paginate_button');
+                            button.classList.add('px-3', 'py-2', 'ml-1', 'text-sm', 'border', 'border-gray-300', 'rounded-md', 'text-gray-700', 'bg-white', 'hover:bg-gray-50', 'hover:text-gray-900', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-500', 'focus:border-transparent');
+                        });
+                        
+                        const currentButtons = wrapper.querySelectorAll('.current');
+                        currentButtons.forEach(button => {
+                            button.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
+                        });
+                        
+                        const disabledButtons = wrapper.querySelectorAll('.disabled');
+                        disabledButtons.forEach(button => {
+                            button.classList.add('opacity-50', 'cursor-not-allowed');
+                        });
+                    }
+                },
+                initComplete: function(settings, json) {
+                    // Apply Tailwind classes to search input and length select
+                    const wrapper = document.getElementById(tableId + '_wrapper');
+                    if (wrapper) {
+                        const searchInput = wrapper.querySelector('input[type="search"]');
+                        if (searchInput) {
+                            searchInput.classList.add('ml-2', 'px-3', 'py-2', 'border', 'border-gray-300', 'rounded-md', 'text-sm', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-500', 'focus:border-transparent');
+                        }
+                        
+                        const lengthSelect = wrapper.querySelector('select[name*="length"]');
+                        if (lengthSelect) {
+                            lengthSelect.classList.add('ml-2', 'px-3', 'py-1', 'border', 'border-gray-300', 'rounded-md', 'text-sm', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-500', 'focus:border-transparent');
+                        }
+                    }
+                }
+            };
+            
+            // Apply server-side processing if specified
+            if (table.hasAttribute('data-server-side')) {
+                config.serverSide = true;
+                config.ajax = {
+                    url: table.getAttribute('data-ajax-url') || '',
+                    type: 'POST',
+                    data: function(d) {
+                        // Add any additional parameters here
+                        return d;
+                    }
+                };
+            }
+            
+            // Initialize DataTable
+            try {
+                $(table).DataTable(config);
+            } catch (error) {
+                console.error('Error initializing DataTable:', error);
+            }
+        });
+    }
+}
+
+// Function to reinitialize DataTables (useful for dynamic content)
+function reinitializeDataTables() {
+    if (typeof $.fn.DataTable !== 'undefined') {
+        $('.data-table').each(function() {
+            if ($.fn.DataTable.isDataTable(this)) {
+                $(this).DataTable().destroy();
+            }
+        });
+        initializeDataTables();
+    }
+}
+
+// Function to add a new row to DataTable
+function addRowToDataTable(tableId, rowData) {
+    if (typeof $.fn.DataTable !== 'undefined') {
+        const table = $('#' + tableId).DataTable();
+        table.row.add(rowData).draw();
+    }
+}
+
+// Function to remove a row from DataTable
+function removeRowFromDataTable(tableId, rowIndex) {
+    if (typeof $.fn.DataTable !== 'undefined') {
+        const table = $('#' + tableId).DataTable();
+        table.row(rowIndex).remove().draw();
+    }
+}
+
+// Function to update a row in DataTable
+function updateRowInDataTable(tableId, rowIndex, rowData) {
+    if (typeof $.fn.DataTable !== 'undefined') {
+        const table = $('#' + tableId).DataTable();
+        table.row(rowIndex).data(rowData).draw();
+    }
+}
+
+// Function to refresh DataTable
+function refreshDataTable(tableId) {
+    if (typeof $.fn.DataTable !== 'undefined') {
+        const table = $('#' + tableId).DataTable();
+        table.ajax.reload(null, false);
+    }
+}
 
 // Form validation function
 function validateForm(form) {
@@ -327,5 +456,11 @@ window.HospitalProcurement = {
     validateForm,
     formatCurrency,
     formatDate,
-    autoResize
+    autoResize,
+    initializeDataTables,
+    reinitializeDataTables,
+    addRowToDataTable,
+    removeRowFromDataTable,
+    updateRowInDataTable,
+    refreshDataTable
 };
