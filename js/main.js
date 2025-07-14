@@ -3,97 +3,26 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize DataTables for all tables with class 'data-table'
     initializeDataTables();
     
-    // Mobile menu toggle
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const sidebar = document.getElementById('sidebar');
-    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    // Initialize mobile menu
+    initializeMobileMenu();
     
-    if (mobileMenuButton) {
-        mobileMenuButton.addEventListener('click', function() {
-            sidebar.classList.toggle('active');
-            sidebarOverlay.classList.toggle('active');
-        });
-    }
+    // Initialize user dropdown
+    initializeUserDropdown();
     
-    if (sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', function() {
-            sidebar.classList.remove('active');
-            sidebarOverlay.classList.remove('active');
-        });
-    }
+    // Initialize form validation
+    initializeFormValidation();
     
-    // User dropdown toggle
-    const userMenu = document.getElementById('user-menu');
-    const userDropdown = document.getElementById('user-dropdown');
-    
-    if (userMenu) {
-        userMenu.addEventListener('click', function(e) {
-            e.stopPropagation();
-            userDropdown.classList.toggle('hidden');
-        });
-    }
-    
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(event) {
-        if (userDropdown && userMenu) {
-            if (!userMenu.contains(event.target) && !userDropdown.contains(event.target)) {
-                userDropdown.classList.add('hidden');
-            }
-        }
-    });
-    
-    // Form validation
-    const forms = document.querySelectorAll('form[data-validate]');
-    forms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            if (!validateForm(form)) {
-                e.preventDefault();
-            }
-        });
-    });
-    
-    // Delete confirmation
-    const deleteButtons = document.querySelectorAll('.delete-btn');
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const url = this.getAttribute('href');
-            const itemName = this.getAttribute('data-name') || 'รายการนี้';
-            
-            Swal.fire({
-                title: 'ยืนยันการลบ',
-                text: `คุณแน่ใจหรือไม่ที่จะลบ ${itemName}?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#ef4444',
-                cancelButtonColor: '#6b7280',
-                confirmButtonText: 'ลบ',
-                cancelButtonText: 'ยกเลิก'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = url;
-                }
-            });
-        });
-    });
+    // Initialize delete confirmations
+    initializeDeleteConfirmations();
     
     // Auto-hide alerts
-    const alerts = document.querySelectorAll('.alert');
-    alerts.forEach(alert => {
-        setTimeout(() => {
-            alert.style.opacity = '0';
-            setTimeout(() => {
-                alert.remove();
-            }, 300);
-        }, 5000);
-    });
+    initializeAlerts();
     
     // Initialize tooltips
-    const tooltips = document.querySelectorAll('[data-tooltip]');
-    tooltips.forEach(tooltip => {
-        tooltip.addEventListener('mouseenter', showTooltip);
-        tooltip.addEventListener('mouseleave', hideTooltip);
-    });
+    initializeTooltips();
+    
+    // Initialize fade-in animations
+    initializeFadeAnimations();
 });
 
 // DataTables initialization function
@@ -141,7 +70,6 @@ function initializeDataTables() {
                     if (wrapper) {
                         const paginateButtons = wrapper.querySelectorAll('.paginate_button');
                         paginateButtons.forEach(button => {
-                            button.classList.remove('paginate_button');
                             button.classList.add('px-3', 'py-2', 'ml-1', 'text-sm', 'border', 'border-gray-300', 'rounded-md', 'text-gray-700', 'bg-white', 'hover:bg-gray-50', 'hover:text-gray-900', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-500', 'focus:border-transparent');
                         });
                         
@@ -162,12 +90,12 @@ function initializeDataTables() {
                     if (wrapper) {
                         const searchInput = wrapper.querySelector('input[type="search"]');
                         if (searchInput) {
-                            searchInput.classList.add('ml-2', 'px-3', 'py-2', 'border', 'border-gray-300', 'rounded-md', 'text-sm', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-500', 'focus:border-transparent');
+                            searchInput.classList.add('form-input', 'w-auto', 'inline-block', 'ml-2');
                         }
                         
                         const lengthSelect = wrapper.querySelector('select[name*="length"]');
                         if (lengthSelect) {
-                            lengthSelect.classList.add('ml-2', 'px-3', 'py-1', 'border', 'border-gray-300', 'rounded-md', 'text-sm', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-500', 'focus:border-transparent');
+                            lengthSelect.classList.add('form-select', 'w-auto', 'inline-block', 'ml-2');
                         }
                     }
                 }
@@ -194,6 +122,134 @@ function initializeDataTables() {
             }
         });
     }
+}
+
+// Initialize mobile menu
+function initializeMobileMenu() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    
+    if (mobileMenuButton && sidebar && sidebarOverlay) {
+        mobileMenuButton.addEventListener('click', function() {
+            sidebar.classList.toggle('translate-x-0');
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarOverlay.classList.toggle('hidden');
+        });
+        
+        sidebarOverlay.addEventListener('click', function() {
+            sidebar.classList.add('-translate-x-full');
+            sidebar.classList.remove('translate-x-0');
+            sidebarOverlay.classList.add('hidden');
+        });
+    }
+}
+
+// Initialize user dropdown
+function initializeUserDropdown() {
+    const userMenu = document.getElementById('user-menu');
+    const userDropdown = document.getElementById('user-dropdown');
+    
+    if (userMenu && userDropdown) {
+        userMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            userDropdown.classList.toggle('hidden');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!userMenu.contains(event.target) && !userDropdown.contains(event.target)) {
+                userDropdown.classList.add('hidden');
+            }
+        });
+    }
+}
+
+// Initialize form validation
+function initializeFormValidation() {
+    const forms = document.querySelectorAll('form[data-validate]');
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!validateForm(form)) {
+                e.preventDefault();
+            }
+        });
+    });
+}
+
+// Initialize delete confirmations
+function initializeDeleteConfirmations() {
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.getAttribute('href');
+            const itemName = this.getAttribute('data-name') || 'รายการนี้';
+            
+            Swal.fire({
+                title: 'ยืนยันการลบ',
+                text: `คุณแน่ใจหรือไม่ที่จะลบ ${itemName}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'ลบ',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+        });
+    });
+}
+
+// Initialize alerts
+function initializeAlerts() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        // Add close button functionality
+        const closeBtn = alert.querySelector('.alert-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function() {
+                alert.classList.add('opacity-0');
+                setTimeout(() => alert.remove(), 300);
+            });
+        }
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            if (alert.parentElement) {
+                alert.classList.add('opacity-0');
+                setTimeout(() => alert.remove(), 300);
+            }
+        }, 5000);
+    });
+}
+
+// Initialize tooltips
+function initializeTooltips() {
+    const tooltips = document.querySelectorAll('[data-tooltip]');
+    tooltips.forEach(tooltip => {
+        tooltip.addEventListener('mouseenter', showTooltip);
+        tooltip.addEventListener('mouseleave', hideTooltip);
+    });
+}
+
+// Initialize fade-in animations
+function initializeFadeAnimations() {
+    const fadeElements = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('show');
+            }
+        });
+    });
+    
+    fadeElements.forEach(element => {
+        observer.observe(element);
+    });
 }
 
 // Function to reinitialize DataTables (useful for dynamic content)

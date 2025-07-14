@@ -10,9 +10,9 @@ try {
     require_once 'config/database.php';
     $database = new Database();
     $db = $database->getConnection();
-    echo "<p style='color: green;'>✓ เชื่อมต่อฐานข้อมูลสำเร็จ</p>\n";
+    echo "<p class='text-green-600'>✓ เชื่อมต่อฐานข้อมูลสำเร็จ</p>\n";
 } catch (Exception $e) {
-    echo "<p style='color: red;'>✗ เชื่อมต่อฐานข้อมูลไม่สำเร็จ: " . $e->getMessage() . "</p>\n";
+    echo "<p class='text-red-600'>✗ เชื่อมต่อฐานข้อมูลไม่สำเร็จ: " . $e->getMessage() . "</p>\n";
 }
 
 // Test 2: Check required tables
@@ -23,9 +23,9 @@ foreach ($required_tables as $table) {
         $stmt = $db->prepare("SELECT COUNT(*) FROM $table");
         $stmt->execute();
         $count = $stmt->fetchColumn();
-        echo "<p style='color: green;'>✓ ตาราง $table: $count รายการ</p>\n";
+        echo "<p class='text-green-600'>✓ ตาราง $table: $count รายการ</p>\n";
     } catch (Exception $e) {
-        echo "<p style='color: red;'>✗ ตาราง $table: ไม่พบ</p>\n";
+        echo "<p class='text-red-600'>✗ ตาราง $table: ไม่พบ</p>\n";
     }
 }
 
@@ -36,9 +36,9 @@ foreach ($models as $model) {
     try {
         require_once "models/$model.php";
         $obj = new $model($db);
-        echo "<p style='color: green;'>✓ Model $model: โหลดสำเร็จ</p>\n";
+        echo "<p class='text-green-600'>✓ Model $model: โหลดสำเร็จ</p>\n";
     } catch (Exception $e) {
-        echo "<p style='color: red;'>✗ Model $model: " . $e->getMessage() . "</p>\n";
+        echo "<p class='text-red-600'>✗ Model $model: " . $e->getMessage() . "</p>\n";
     }
 }
 
@@ -48,7 +48,7 @@ try {
     $user = new User($db);
     $auth_result = $user->authenticate('admin', 'admin123');
     if ($auth_result) {
-        echo "<p style='color: green;'>✓ ทดสอบ login ด้วย admin/admin123: สำเร็จ</p>\n";
+        echo "<p class='text-green-600'>✓ ทดสอบ login ด้วย admin/admin123: สำเร็จ</p>\n";
     } else {
         echo "<p style='color: red;'>✗ ทดสอบ login ด้วย admin/admin123: ล้มเหลว</p>\n";
     }

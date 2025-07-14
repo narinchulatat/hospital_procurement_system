@@ -5,7 +5,29 @@ body {
     font-family: 'Sarabun', sans-serif;
 }
 
-/* DataTables Tailwind CSS Integration */
+/* Base styles for smooth transitions and animations */
+* {
+    @apply transition-colors duration-200;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400;
+}
+
+/* DataTables integration with Tailwind CSS */
 .dataTables_wrapper {
     @apply w-full;
 }
@@ -19,7 +41,7 @@ body {
 }
 
 .dataTables_length select {
-    @apply ml-2 px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+    @apply form-select w-auto inline-block ml-2;
 }
 
 .dataTables_filter {
@@ -31,7 +53,7 @@ body {
 }
 
 .dataTables_filter input {
-    @apply ml-2 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+    @apply form-input w-auto inline-block ml-2;
 }
 
 .dataTables_info {
@@ -43,7 +65,7 @@ body {
 }
 
 .dataTables_paginate .paginate_button {
-    @apply px-3 py-2 ml-1 text-sm border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+    @apply px-3 py-2 ml-1 text-sm border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer;
 }
 
 .dataTables_paginate .paginate_button.current {
@@ -52,10 +74,6 @@ body {
 
 .dataTables_paginate .paginate_button.disabled {
     @apply opacity-50 cursor-not-allowed hover:bg-white hover:text-gray-700;
-}
-
-.dataTables_paginate .paginate_button:hover:not(.disabled):not(.current) {
-    @apply bg-gray-50 text-gray-900;
 }
 
 .dataTables_processing {
@@ -90,50 +108,14 @@ table.dataTable.hover tbody tr:hover {
     @apply bg-blue-50;
 }
 
+/* Hide default DataTables sorting indicators */
 table.dataTable thead th.sorting:before,
 table.dataTable thead th.sorting_asc:before,
-table.dataTable thead th.sorting_desc:before {
-    display: none;
-}
-
+table.dataTable thead th.sorting_desc:before,
 table.dataTable thead th.sorting:after,
 table.dataTable thead th.sorting_asc:after,
 table.dataTable thead th.sorting_desc:after {
     display: none;
-}
-
-table.dataTable thead th.sorting,
-table.dataTable thead th.sorting_asc,
-table.dataTable thead th.sorting_desc {
-    @apply cursor-pointer relative;
-}
-
-table.dataTable thead th.sorting:hover,
-table.dataTable thead th.sorting_asc:hover,
-table.dataTable thead th.sorting_desc:hover {
-    @apply bg-gray-100;
-}
-
-/* Custom sorting icons using Tailwind and FontAwesome */
-table.dataTable thead th.sorting::after {
-    content: "\f0dc";
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-    @apply absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400;
-}
-
-table.dataTable thead th.sorting_asc::after {
-    content: "\f0de";
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-    @apply absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600;
-}
-
-table.dataTable thead th.sorting_desc::after {
-    content: "\f0dd";
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-    @apply absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600;
 }
 
 /* Responsive DataTables */
@@ -157,25 +139,33 @@ table.dataTable thead th.sorting_desc::after {
     }
 }
 
-/* Custom Tailwind components */
+/* Essential Tailwind component utilities */
+.btn {
+    @apply inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200;
+}
+
 .btn-primary {
-    @apply bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-200;
+    @apply btn bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
 }
 
 .btn-secondary {
-    @apply bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition duration-200;
+    @apply btn bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500;
 }
 
 .btn-success {
-    @apply bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition duration-200;
+    @apply btn bg-green-600 text-white hover:bg-green-700 focus:ring-green-500;
 }
 
 .btn-danger {
-    @apply bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200;
+    @apply btn bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
 }
 
 .btn-warning {
-    @apply bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-md transition duration-200;
+    @apply btn bg-yellow-600 text-white hover:bg-yellow-700 focus:ring-yellow-500;
+}
+
+.btn-outline {
+    @apply btn border-gray-300 text-gray-700 bg-white hover:bg-gray-50 focus:ring-blue-500;
 }
 
 .btn-sm {
@@ -186,46 +176,81 @@ table.dataTable thead th.sorting_desc::after {
     @apply px-6 py-3 text-lg;
 }
 
-.form-input {
-    @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500;
-}
-
-.form-select {
-    @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500;
-}
-
-.form-textarea {
-    @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500;
+/* Form components */
+.form-group {
+    @apply mb-4;
 }
 
 .form-label {
     @apply block text-sm font-medium text-gray-700 mb-1;
 }
 
-.form-error {
-    @apply text-red-600 text-sm mt-1;
+.form-input {
+    @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500;
 }
 
+.form-input:focus {
+    @apply ring-2 ring-blue-500 ring-opacity-50 border-blue-500;
+}
+
+.form-input.error {
+    @apply border-red-500 focus:ring-red-500 focus:border-red-500;
+}
+
+.form-select {
+    @apply form-input appearance-none;
+}
+
+.form-textarea {
+    @apply form-input resize-vertical min-h-[80px];
+}
+
+.form-checkbox {
+    @apply h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded;
+}
+
+.form-radio {
+    @apply h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300;
+}
+
+.form-error {
+    @apply text-red-600 text-sm mt-1 block;
+}
+
+.form-help {
+    @apply text-gray-500 text-sm mt-1 block;
+}
+
+/* Alert components */
 .alert {
-    @apply px-4 py-3 rounded-md mb-4;
+    @apply px-4 py-3 rounded-md mb-4 border flex items-center;
 }
 
 .alert-success {
-    @apply bg-green-100 border border-green-400 text-green-700;
+    @apply alert bg-green-50 border-green-200 text-green-800;
 }
 
 .alert-error {
-    @apply bg-red-100 border border-red-400 text-red-700;
+    @apply alert bg-red-50 border-red-200 text-red-800;
 }
 
 .alert-warning {
-    @apply bg-yellow-100 border border-yellow-400 text-yellow-700;
+    @apply alert bg-yellow-50 border-yellow-200 text-yellow-800;
 }
 
 .alert-info {
-    @apply bg-blue-100 border border-blue-400 text-blue-700;
+    @apply alert bg-blue-50 border-blue-200 text-blue-800;
 }
 
+.alert-dismissible {
+    @apply pr-12 relative;
+}
+
+.alert-dismissible .alert-close {
+    @apply absolute top-0 right-0 p-3 text-current opacity-75 hover:opacity-100 cursor-pointer;
+}
+
+/* Table components */
 .table {
     @apply min-w-full divide-y divide-gray-200;
 }
@@ -242,100 +267,104 @@ table.dataTable thead th.sorting_desc::after {
     @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900;
 }
 
+.table tbody tr {
+    @apply border-b border-gray-200;
+}
+
 .table tbody tr:hover {
     @apply bg-gray-50;
 }
 
-.status-badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+.table tbody tr:nth-child(even) {
+    @apply bg-gray-50;
 }
 
-.status-pending {
-    @apply bg-yellow-100 text-yellow-800;
+.table tbody tr:nth-child(odd) {
+    @apply bg-white;
 }
 
-.status-approved {
-    @apply bg-green-100 text-green-800;
+.table-striped tbody tr:nth-child(even) {
+    @apply bg-gray-50;
 }
 
-.status-rejected {
-    @apply bg-red-100 text-red-800;
+.table-hover tbody tr:hover {
+    @apply bg-blue-50;
 }
 
-.status-draft {
-    @apply bg-gray-100 text-gray-800;
+.table-responsive {
+    @apply overflow-x-auto;
 }
 
-.status-processing {
-    @apply bg-blue-100 text-blue-800;
-}
-
-.status-completed {
-    @apply bg-green-100 text-green-800;
-}
-
+/* Card components */
 .card {
     @apply bg-white overflow-hidden shadow rounded-lg;
 }
 
 .card-header {
-    @apply px-4 py-5 border-b border-gray-200;
+    @apply px-6 py-4 border-b border-gray-200;
 }
 
 .card-body {
-    @apply px-4 py-5;
+    @apply px-6 py-4;
 }
 
 .card-footer {
-    @apply px-4 py-4 border-t border-gray-200;
+    @apply px-6 py-4 border-t border-gray-200;
 }
 
-.modal {
-    @apply fixed z-10 inset-0 overflow-y-auto;
+/* Status badges */
+.status-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
 }
 
-.modal-overlay {
-    @apply fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity;
+.status-pending {
+    @apply status-badge bg-yellow-100 text-yellow-800;
 }
 
-.modal-content {
-    @apply bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all;
+.status-approved {
+    @apply status-badge bg-green-100 text-green-800;
 }
 
-.modal-header {
-    @apply px-4 py-3 border-b border-gray-200;
+.status-rejected {
+    @apply status-badge bg-red-100 text-red-800;
 }
 
-.modal-body {
-    @apply px-4 py-5;
+.status-draft {
+    @apply status-badge bg-gray-100 text-gray-800;
 }
 
-.modal-footer {
-    @apply px-4 py-3 border-t border-gray-200 flex justify-end space-x-2;
+.status-processing {
+    @apply status-badge bg-blue-100 text-blue-800;
 }
 
-.pagination {
-    @apply flex items-center justify-center space-x-2;
+.status-completed {
+    @apply status-badge bg-green-100 text-green-800;
 }
 
-.pagination a,
-.pagination span {
-    @apply px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50;
-}
-
-.pagination .current {
-    @apply bg-blue-600 text-white border-blue-600;
-}
-
+/* Utility classes */
 .loading {
-    @apply opacity-50 pointer-events-none;
+    @apply opacity-50 pointer-events-none relative;
+}
+
+.loading::after {
+    content: '';
+    @apply absolute inset-0 flex items-center justify-center;
+    background: rgba(255, 255, 255, 0.8);
 }
 
 .spinner {
     @apply animate-spin h-5 w-5 border-2 border-gray-300 border-t-blue-600 rounded-full;
 }
 
-/* Responsive table */
+.fade-in {
+    @apply opacity-0 transform translate-y-4 transition-all duration-300;
+}
+
+.fade-in.show {
+    @apply opacity-100 transform translate-y-0;
+}
+
+/* Responsive utilities */
 @media (max-width: 768px) {
     .table-responsive {
         @apply overflow-x-auto;
@@ -344,5 +373,15 @@ table.dataTable thead th.sorting_desc::after {
     .table th,
     .table td {
         @apply px-4 py-2 text-sm;
+    }
+    
+    .card {
+        @apply mx-2;
+    }
+    
+    .card-header,
+    .card-body,
+    .card-footer {
+        @apply px-4 py-3;
     }
 }
