@@ -35,20 +35,20 @@ $base_url = '';
 include 'includes/header.php';
 ?>
                 <!-- Header -->
-                <div class="mb-4">
-                    <h1 class="h2 text-dark fw-bold">Dashboard</h1>
-                    <p class="text-muted">ภาพรวมระบบจัดซื้อครุภัณฑ์คอมพิวเตอร์</p>
+                <div class="mb-6">
+                    <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+                    <p class="text-gray-600">ภาพรวมระบบจัดซื้อครุภัณฑ์คอมพิวเตอร์</p>
                 </div>
 
                 <!-- Current Budget Year Info -->
                 <?php if ($current_budget_year): ?>
-                <div class="mb-4">
-                    <div class="alert alert-info">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-calendar-alt text-info me-3"></i>
+                <div class="mb-6">
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-calendar-alt text-blue-600 text-xl mr-3"></i>
                             <div>
-                                <h5 class="alert-heading">ปีงบประมาณ <?php echo $current_budget_year->year_be; ?></h5>
-                                <p class="mb-0">
+                                <h5 class="font-semibold text-blue-900">ปีงบประมาณ <?php echo $current_budget_year->year_be; ?></h5>
+                                <p class="text-blue-700 text-sm">
                                     ช่วงการขอ: <?php echo formatThaiDate($current_budget_year->request_start_date); ?> - <?php echo formatThaiDate($current_budget_year->request_end_date); ?>
                                 </p>
                             </div>
@@ -58,26 +58,20 @@ include 'includes/header.php';
                 <?php endif; ?>
 
                 <!-- Statistics Cards -->
-                <div class="row g-4 mb-4">
-                    <div class="col-md-3">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center justify-content-center mb-3">
-                                    <div class="p-3 rounded-circle bg-primary bg-opacity-10">
-                                        <i class="fas fa-file-alt text-primary fs-4"></i>
-                                    </div>
-                                </div>
-                                <h6 class="card-title text-muted">คำขอทั้งหมด</h6>
-                                <h2 class="card-text text-dark"><?php echo number_format($statistics['total_requests']); ?></h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-white rounded-lg shadow p-6 text-center">
+                        <div class="flex items-center justify-center mb-4">
+                            <div class="p-3 rounded-full bg-blue-100">
+                                <i class="fas fa-file-alt text-blue-600 text-xl"></i>
                             </div>
                         </div>
+                        <h6 class="text-sm text-gray-600 mb-2">คำขอทั้งหมด</h6>
+                        <h2 class="text-2xl font-bold text-gray-900"><?php echo number_format($statistics['total_requests']); ?></h2>
                     </div>
 
-                    <div class="col-md-3">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center justify-content-center mb-3">
-                                    <div class="p-3 rounded-circle bg-warning bg-opacity-10">
+                    <div class="bg-white rounded-lg shadow p-6 text-center">
+                        <div class="flex items-center justify-center mb-4">
+                            <div class="p-3 rounded-full bg-yellow-100">
                                         <i class="fas fa-clock text-warning fs-4"></i>
                                     </div>
                                 </div>

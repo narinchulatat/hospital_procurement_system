@@ -2,7 +2,7 @@
 session_start();
 
 // Include database connection
-require_once __DIR__ . '/../config/database_sqlite.php';
+require_once __DIR__ . '/../config/database.php';
 
 // Include models
 require_once __DIR__ . '/../models/User.php';
