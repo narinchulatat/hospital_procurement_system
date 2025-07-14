@@ -1,0 +1,44 @@
+# Uploads directory
+uploads/
+
+# Logs
+logs/
+*.log
+
+# Database config (if contains sensitive data)
+# config/database.php
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+
+# Cache files
+cache/
+
+# PHP error logs
+error_log
+php_errors.log
+
+# Backup files
+*.bak
+*.backup
+*.sql
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Testing files
+test_output/
