@@ -84,40 +84,39 @@ include 'includes/header.php';
 
         <!-- Request Form -->
         <?php if ($request_status && $request_status['status'] == 'open'): ?>
-        <div class="bg-white rounded-lg shadow">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">ข้อมูลคำขอ</h3>
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">ข้อมูลคำขอ</h5>
             </div>
             
-            <form action="request_process.php" method="POST" enctype="multipart/form-data" class="p-6">
-                <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Department -->
-                    <div>
-                        <label for="department_id" class="block text-sm font-medium text-gray-700 mb-2">แผนก</label>
-                        <?php if ($_SESSION['user_role'] == 'admin'): ?>
-                        <select id="department_id" name="department_id" required 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="">เลือกแผนก</option>
-                            <?php while ($dept = $departments->fetch(PDO::FETCH_ASSOC)): ?>
-                            <option value="<?php echo $dept['id']; ?>"><?php echo htmlspecialchars($dept['name']); ?></option>
-                            <?php endwhile; ?>
-                        </select>
-                        <?php else: ?>
-                        <input type="hidden" name="department_id" value="<?php echo $_SESSION['department_id']; ?>">
-                        <input type="text" value="<?php echo htmlspecialchars($_SESSION['department_name']); ?>" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" readonly>
-                        <?php endif; ?>
-                    </div>
+            <div class="card-body">
+                <form action="request_process.php" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
+                    
+                    <div class="row g-3">
+                        <!-- Department -->
+                        <div class="col-md-6">
+                            <label for="department_id" class="form-label">แผนก</label>
+                            <?php if ($_SESSION['user_role'] == 'admin'): ?>
+                            <select id="department_id" name="department_id" required class="form-select">
+                                <option value="">เลือกแผนก</option>
+                                <?php while ($dept = $departments->fetch(PDO::FETCH_ASSOC)): ?>
+                                <option value="<?php echo $dept['id']; ?>"><?php echo htmlspecialchars($dept['name']); ?></option>
+                                <?php endwhile; ?>
+                            </select>
+                            <?php else: ?>
+                            <input type="hidden" name="department_id" value="<?php echo $_SESSION['department_id']; ?>">
+                            <input type="text" value="<?php echo htmlspecialchars($_SESSION['department_name']); ?>" 
+                                   class="form-control" readonly>
+                            <?php endif; ?>
+                        </div>
 
-                    <!-- Sub-department -->
-                    <div>
-                        <label for="sub_department_id" class="block text-sm font-medium text-gray-700 mb-2">หน่วยงาน</label>
-                        <select id="sub_department_id" name="sub_department_id" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="">เลือกหน่วยงาน (ถ้ามี)</option>
-                            <?php if ($sub_departments): ?>
+                        <!-- Sub-department -->
+                        <div class="col-md-6">
+                            <label for="sub_department_id" class="form-label">หน่วยงาน</label>
+                            <select id="sub_department_id" name="sub_department_id" class="form-select">
+                                <option value="">เลือกหน่วยงาน (ถ้ามี)</option>
+                                <?php if ($sub_departments): ?>
                             <?php while ($sub_dept = $sub_departments->fetch(PDO::FETCH_ASSOC)): ?>
                             <option value="<?php echo $sub_dept['id']; ?>" 
                                     <?php echo ($sub_dept['id'] == $_SESSION['sub_department_id']) ? 'selected' : ''; ?>>
@@ -129,10 +128,9 @@ include 'includes/header.php';
                     </div>
 
                     <!-- Item -->
-                    <div class="md:col-span-2">
-                        <label for="item_id" class="block text-sm font-medium text-gray-700 mb-2">รายการครุภัณฑ์</label>
-                        <select id="item_id" name="item_id" required 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="col-12">
+                        <label for="item_id" class="form-label">รายการครุภัณฑ์</label>
+                        <select id="item_id" name="item_id" required class="form-select">
                             <option value="">เลือกรายการครุภัณฑ์</option>
                             <?php while ($item_row = $items->fetch(PDO::FETCH_ASSOC)): ?>
                             <option value="<?php echo $item_row['id']; ?>" 
@@ -147,88 +145,87 @@ include 'includes/header.php';
                     </div>
 
                     <!-- Item Details -->
-                    <div id="item-details" class="md:col-span-2 hidden">
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <h4 class="font-semibold text-gray-900 mb-2">รายละเอียดครุภัณฑ์</h4>
-                            <div id="item-specifications" class="text-sm text-gray-600"></div>
+                    <div id="item-details" class="col-12 d-none">
+                        <div class="alert alert-info">
+                            <h6 class="alert-heading">รายละเอียดครุภัณฑ์</h6>
+                            <div id="item-specifications" class="small"></div>
                         </div>
                     </div>
 
                     <!-- Quantity -->
-                    <div>
-                        <label for="quantity" class="block text-sm font-medium text-gray-700 mb-2">จำนวน</label>
-                        <input type="number" id="quantity" name="quantity" min="1" required 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <div class="mt-1 text-sm text-gray-500">
+                    <div class="col-md-6">
+                        <label for="quantity" class="form-label">จำนวน</label>
+                        <input type="number" id="quantity" name="quantity" min="1" required class="form-control">
+                        <div class="form-text">
                             หน่วย: <span id="unit-display">-</span>
                         </div>
                     </div>
 
                     <!-- Total Price -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">ราคารวม</label>
-                        <div class="text-lg font-semibold text-blue-600" id="total-price">0.00 บาท</div>
+                    <div class="col-md-6">
+                        <label class="form-label">ราคารวม</label>
+                        <div class="fs-5 fw-bold text-primary" id="total-price">0.00 บาท</div>
                     </div>
 
                     <!-- Request Type -->
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">ประเภทการขอ</label>
-                        <div class="space-y-2">
-                            <label class="flex items-center">
-                                <input type="radio" name="request_type" value="new" checked 
-                                       class="mr-2 text-blue-600 focus:ring-blue-500">
-                                <span>ขอใหม่</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="radio" name="request_type" value="replacement" 
-                                       class="mr-2 text-blue-600 focus:ring-blue-500">
-                                <span>ขอทดแทน</span>
-                            </label>
+                    <div class="col-12">
+                        <label class="form-label">ประเภทการขอ</label>
+                        <div class="d-flex gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="request_type" value="new" checked id="request_new">
+                                <label class="form-check-label" for="request_new">
+                                    ขอใหม่
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="request_type" value="replacement" id="request_replacement">
+                                <label class="form-check-label" for="request_replacement">
+                                    ขอทดแทน
+                                </label>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Old Equipment Code (for replacement) -->
-                    <div id="old-equipment-section" class="md:col-span-2 hidden">
-                        <label for="old_equipment_code" class="block text-sm font-medium text-gray-700 mb-2">เลขครุภัณฑ์เดิม</label>
+                    <div id="old-equipment-section" class="col-12 d-none">
+                        <label for="old_equipment_code" class="form-label">เลขครุภัณฑ์เดิม</label>
                         <input type="text" id="old_equipment_code" name="old_equipment_code" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               class="form-control"
                                placeholder="กรอกเลขครุภัณฑ์เดิมที่ต้องการทดแทน">
                     </div>
 
                     <!-- Reason -->
-                    <div class="md:col-span-2">
-                        <label for="reason" class="block text-sm font-medium text-gray-700 mb-2">เหตุผลความจำเป็น</label>
+                    <div class="col-12">
+                        <label for="reason" class="form-label">เหตุผลความจำเป็น</label>
                         <textarea id="reason" name="reason" rows="4" required 
-                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  class="form-control"
                                   placeholder="กรอกเหตุผลความจำเป็นในการขอครุภัณฑ์"></textarea>
                     </div>
 
                     <!-- File Attachment -->
-                    <div class="md:col-span-2">
-                        <label for="attachments" class="block text-sm font-medium text-gray-700 mb-2">ไฟล์แนบ</label>
+                    <div class="col-12">
+                        <label for="attachments" class="form-label">ไฟล์แนบ</label>
                         <input type="file" id="attachments" name="attachments[]" multiple 
                                accept=".pdf,.jpg,.jpeg,.png" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <p class="mt-1 text-sm text-gray-500">
+                               class="form-control">
+                        <div class="form-text">
                             รองรับไฟล์ PDF, JPG, PNG เท่านั้น (ขนาดไม่เกิน 10MB ต่อไฟล์)
-                        </p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="mt-6 flex justify-end space-x-3">
-                    <a href="dashboard.php" 
-                       class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                <div class="mt-4 d-flex justify-content-end gap-2">
+                    <a href="dashboard.php" class="btn btn-secondary">
                         ยกเลิก
                     </a>
-                    <button type="submit" 
-                            class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700">
+                    <button type="submit" class="btn btn-primary">
                         ยื่นคำขอ
                     </button>
                 </div>
             </form>
         </div>
-        <?php endif; ?>
     </div>
+    <?php endif; ?>
 
     <script>
         // Item selection handler
@@ -239,14 +236,14 @@ include 'includes/header.php';
             const unitDisplay = document.getElementById('unit-display');
             
             if (selectedOption.value) {
-                itemDetails.classList.remove('hidden');
+                itemDetails.classList.remove('d-none');
                 itemSpecs.textContent = selectedOption.dataset.specs || 'ไม่มีข้อมูลรายละเอียด';
                 unitDisplay.textContent = selectedOption.dataset.unit || '-';
                 
                 // Calculate total price
                 calculateTotal();
             } else {
-                itemDetails.classList.add('hidden');
+                itemDetails.classList.add('d-none');
                 unitDisplay.textContent = '-';
                 document.getElementById('total-price').textContent = '0.00 บาท';
             }
@@ -282,10 +279,10 @@ include 'includes/header.php';
                 const oldEquipmentInput = document.getElementById('old_equipment_code');
                 
                 if (this.value === 'replacement') {
-                    oldEquipmentSection.classList.remove('hidden');
+                    oldEquipmentSection.classList.remove('d-none');
                     oldEquipmentInput.required = true;
                 } else {
-                    oldEquipmentSection.classList.add('hidden');
+                    oldEquipmentSection.classList.add('d-none');
                     oldEquipmentInput.required = false;
                     oldEquipmentInput.value = '';
                 }
