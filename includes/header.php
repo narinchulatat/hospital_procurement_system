@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($page_title) ? $page_title : 'Hospital Procurement System'; ?> - ระบบจัดซื้อครุภัณฑ์คอมพิวเตอร์</title>
+    <link rel="icon" type="image/x-icon" href="<?php echo $base_url ?? ''; ?>favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -14,6 +15,20 @@
     <style>
         body {
             font-family: 'Sarabun', sans-serif;
+        }
+        .sidebar-enter {
+            transform: translateX(-100%);
+        }
+        .sidebar-enter-active {
+            transform: translateX(0);
+            transition: transform 0.3s ease-in-out;
+        }
+        .sidebar-exit {
+            transform: translateX(0);
+        }
+        .sidebar-exit-active {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
         }
     </style>
     <meta name="csrf-token" content="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
