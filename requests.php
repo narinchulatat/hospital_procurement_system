@@ -82,52 +82,31 @@ $budget_year = new BudgetYear($db);
 $budget_years = $budget_year->readAll();
 
 $page_title = 'รายการคำขอ';
+$base_url = '';
+include 'includes/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $page_title; ?> - ระบบจัดซื้อครุภัณฑ์คอมพิวเตอร์</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        body {
-            font-family: 'Sarabun', sans-serif;
-        }
-    </style>
-</head>
-<body class="bg-gray-100">
-    <!-- Navigation -->
-    <?php include 'includes/navbar.php'; ?>
-
-    <!-- Main Content -->
-    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <!-- Header -->
-        <div class="mb-6">
-            <div class="flex items-center justify-between">
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900">รายการคำขอ</h1>
-                    <p class="text-gray-600">รายการคำขอซื้อครุภัณฑ์คอมพิวเตอร์</p>
+                    <h1 class="h2 text-dark fw-bold">รายการคำขอ</h1>
+                    <p class="text-muted">รายการคำขอซื้อครุภัณฑ์คอมพิวเตอร์</p>
                 </div>
                 <?php if ($_SESSION['user_role'] == 'staff' || $_SESSION['user_role'] == 'department_head'): ?>
-                <a href="request_form.php" 
-                   class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                    <i class="fas fa-plus mr-2"></i>ยื่นคำขอใหม่
+                <a href="request_form.php" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>ยื่นคำขอใหม่
                 </a>
                 <?php endif; ?>
             </div>
         </div>
 
         <!-- Filters -->
-        <div class="bg-white rounded-lg shadow mb-6">
-            <div class="p-6">
-                <form method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">สถานะ</label>
-                        <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="GET" class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">สถานะ</label>
+                        <select name="status" class="form-select">
                             <option value="">ทั้งหมด</option>
                             <?php while ($status_row = $statuses->fetch(PDO::FETCH_ASSOC)): ?>
                             <option value="<?php echo $status_row['id']; ?>" 
@@ -139,9 +118,9 @@ $page_title = 'รายการคำขอ';
                     </div>
 
                     <?php if ($_SESSION['user_role'] == 'admin'): ?>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">แผนก</label>
-                        <select name="department" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="col-md-3">
+                        <label class="form-label">แผนก</label>
+                        <select name="department" class="form-select">
                             <option value="">ทั้งหมด</option>
                             <?php while ($dept_row = $departments->fetch(PDO::FETCH_ASSOC)): ?>
                             <option value="<?php echo $dept_row['id']; ?>" 
@@ -153,9 +132,9 @@ $page_title = 'รายการคำขอ';
                     </div>
                     <?php endif; ?>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">ปีงบประมาณ</label>
-                        <select name="budget_year" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="col-md-3">
+                        <label class="form-label">ปีงบประมาณ</label>
+                        <select name="budget_year" class="form-select">
                             <option value="">ทั้งหมด</option>
                             <?php while ($year_row = $budget_years->fetch(PDO::FETCH_ASSOC)): ?>
                             <option value="<?php echo $year_row['id']; ?>" 
@@ -166,21 +145,19 @@ $page_title = 'รายการคำขอ';
                         </select>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">ค้นหา</label>
+                    <div class="col-md-3">
+                        <label class="form-label">ค้นหา</label>
                         <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" 
                                placeholder="เลขที่คำขอ, รายการ, ชื่อผู้ขอ" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                               class="form-control">
                     </div>
 
-                    <div class="flex items-end space-x-2">
-                        <button type="submit" 
-                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                            <i class="fas fa-search mr-2"></i>ค้นหา
+                    <div class="col-md-12 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search me-2"></i>ค้นหา
                         </button>
-                        <a href="requests.php" 
-                           class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">
-                            <i class="fas fa-times mr-2"></i>ล้าง
+                        <a href="requests.php" class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>ล้าง
                         </a>
                     </div>
                 </form>
@@ -188,17 +165,17 @@ $page_title = 'รายการคำขอ';
         </div>
 
         <!-- Results -->
-        <div class="bg-white rounded-lg shadow">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-semibold text-gray-900">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
                         รายการคำขอ (<?php echo $stmt->rowCount(); ?> รายการ)
-                    </h3>
+                    </h5>
                     <?php if ($_SESSION['user_role'] == 'admin'): ?>
-                    <div class="flex items-center space-x-2">
+                    <div class="d-flex gap-2">
                         <a href="export_requests.php?type=excel" 
-                           class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">
-                            <i class="fas fa-file-excel mr-1"></i>Excel
+                           class="btn btn-success btn-sm">
+                            <i class="fas fa-file-excel me-1"></i>Excel
                         </a>
                         <a href="export_requests.php?type=pdf" 
                            class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700">
@@ -297,5 +274,5 @@ $page_title = 'รายการคำขอ';
             <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
     </script>
-</body>
-</html>
+
+<?php include 'includes/footer.php'; ?>
