@@ -1,0 +1,116 @@
+<?php
+require_once '../../includes/functions.php';
+checkLogin();
+checkRole(['admin']);
+
+$page_title = 'เพิ่มแผนก';
+$base_url = '../../';
+
+// Get database connection
+$database = new Database();
+$db = $database->getConnection();
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // CSRF protection
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $_SESSION['error'] = 'Invalid CSRF token';
+        header('Location: create.php');
+        exit();
+    }
+    
+    $department = new Department($db);
+    $department->name = trim($_POST['name']);
+    $department->code = trim($_POST['code']);
+    $department->description = trim($_POST['description']);
+    
+    // Validation
+    $errors = [];
+    
+    if (empty($department->name)) {
+        $errors[] = 'กรุณากรอกชื่อแผนก';
+    } elseif ($department->checkNameExists($department->name)) {
+        $errors[] = 'ชื่อแผนกนี้มีอยู่แล้ว';
+    }
+    
+    if (!empty($department->code) && $department->checkCodeExists($department->code)) {
+        $errors[] = 'รหัสแผนกนี้มีอยู่แล้ว';
+    }
+    
+    if (empty($errors)) {
+        if ($department->create()) {
+            // Log activity
+            logActivity($_SESSION['user_id'], 'CREATE', 'สร้างแผนก: ' . $department->name, 'departments', $department->id);
+            
+            $_SESSION['success'] = 'เพิ่มแผนกเรียบร้อยแล้ว';
+            header('Location: index.php');
+            exit();
+        } else {
+            $_SESSION['error'] = 'เกิดข้อผิดพลาดในการเพิ่มแผนก';
+        }
+    }
+}
+
+// Generate CSRF token
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+include '../../includes/header.php';
+?>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">เพิ่มแผนก</h1>
+    <a href="index.php" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>กลับ
+    </a>
+</div>
+
+<?php if (!empty($errors)): ?>
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <strong>เกิดข้อผิดพลาด:</strong>
+        <ul class="mb-0 mt-2">
+            <?php foreach ($errors as $error): ?>
+                <li><?php echo htmlspecialchars($error); ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+
+<div class="card">
+    <div class="card-body">
+        <form method="POST" data-validate>
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">ชื่อแผนก <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($_POST['name'] ?? ''); ?>" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="code" class="form-label">รหัสแผนก</label>
+                        <input type="text" class="form-control" id="code" name="code" value="<?php echo htmlspecialchars($_POST['code'] ?? ''); ?>" placeholder="เช่น IT, HR, FIN">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="description" class="form-label">คำอธิบาย</label>
+                <textarea class="form-control" id="description" name="description" rows="3" placeholder="อธิบายรายละเอียดของแผนก"><?php echo htmlspecialchars($_POST['description'] ?? ''); ?></textarea>
+            </div>
+            
+            <div class="d-flex justify-content-end gap-2">
+                <a href="index.php" class="btn btn-secondary">ยกเลิก</a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-2"></i>บันทึก
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<?php include '../../includes/footer.php'; ?>
