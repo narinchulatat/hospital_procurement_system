@@ -13,22 +13,16 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
-            font-family: 'Sarabun', sans-serif;
-        }
-        .sidebar-enter {
-            transform: translateX(-100%);
-        }
-        .sidebar-enter-active {
-            transform: translateX(0);
+        .sidebar-transition {
             transition: transform 0.3s ease-in-out;
         }
-        .sidebar-exit {
-            transform: translateX(0);
-        }
-        .sidebar-exit-active {
+        
+        .sidebar-mobile {
             transform: translateX(-100%);
-            transition: transform 0.3s ease-in-out;
+        }
+        
+        .sidebar-mobile.active {
+            transform: translateX(0);
         }
     </style>
     <meta name="csrf-token" content="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">

@@ -91,7 +91,7 @@ include '../../includes/header.php';
                                 </td>
                                 <td>
                                     <?php if ($status_data['description']): ?>
-                                        <span class="text-truncate" style="max-width: 300px;" title="<?php echo htmlspecialchars($status_data['description']); ?>">
+                                        <span class="text-truncate max-w-xs" title="<?php echo htmlspecialchars($status_data['description']); ?>">
                                             <?php echo htmlspecialchars($status_data['description']); ?>
                                         </span>
                                     <?php else: ?>
