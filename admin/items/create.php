@@ -84,7 +84,7 @@ if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-include '../../includes/header.php';
+include '../../includes/sidebar.php';
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -205,4 +205,3 @@ include '../../includes/header.php';
     </div>
 </div>
 
-<?php include '../../includes/footer.php'; ?>

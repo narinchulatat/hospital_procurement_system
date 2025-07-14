@@ -32,7 +32,7 @@ $roles = $role->readAll();
 // Set base URL for admin pages
 $base_url = '../../';
 
-include '../../includes/header.php';
+include '../../includes/sidebar.php';
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">

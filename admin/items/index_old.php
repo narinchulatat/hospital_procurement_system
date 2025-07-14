@@ -33,7 +33,7 @@ $budget_years = $budget_year->readAll();
 // Set base URL for admin pages
 $base_url = '../../';
 
-include '../../includes/header.php';
+include '../../includes/sidebar.php';
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -198,4 +198,3 @@ include '../../includes/header.php';
     </div>
 </div>
 
-<?php include '../../includes/footer.php'; ?>

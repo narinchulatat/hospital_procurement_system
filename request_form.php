@@ -31,7 +31,7 @@ if ($_SESSION['department_id']) {
 
 $page_title = 'ยื่นคำขอใหม่';
 $base_url = '';
-include 'includes/header.php';
+include 'includes/sidebar.php';
 ?>
     <!-- Header -->
     <div class="mb-4">
@@ -334,4 +334,3 @@ include 'includes/header.php';
         <?php endif; ?>
     </script>
 
-<?php include 'includes/footer.php'; ?>

@@ -32,7 +32,7 @@ $current_budget_year = $budget_year->getCurrentBudgetYear();
 
 $page_title = 'Dashboard';
 $base_url = '';
-include 'includes/header.php';
+include 'includes/sidebar.php';
 ?>
                 <!-- Header -->
                 <div class="mb-6">
@@ -148,4 +148,3 @@ include 'includes/header.php';
                     </div>
                 </div>
 
-<?php include 'includes/footer.php'; ?>
