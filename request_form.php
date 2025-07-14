@@ -30,69 +30,49 @@ if ($_SESSION['department_id']) {
 }
 
 $page_title = 'ยื่นคำขอใหม่';
+$base_url = '';
+include 'includes/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $page_title; ?> - ระบบจัดซื้อครุภัณฑ์คอมพิวเตอร์</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        body {
-            font-family: 'Sarabun', sans-serif;
-        }
-    </style>
-</head>
-<body class="bg-gray-100">
-    <!-- Navigation -->
-    <?php include 'includes/navbar.php'; ?>
+    <!-- Header -->
+    <div class="mb-4">
+        <h1 class="h2 text-dark fw-bold">ยื่นคำขอใหม่</h1>
+        <p class="text-muted">กรอกข้อมูลคำขอซื้อครุภัณฑ์คอมพิวเตอร์</p>
+    </div>
 
-    <!-- Main Content -->
-    <div class="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <!-- Header -->
-        <div class="mb-6">
-            <h1 class="text-2xl font-bold text-gray-900">ยื่นคำขอใหม่</h1>
-            <p class="text-gray-600">กรอกข้อมูลคำขอซื้อครุภัณฑ์คอมพิวเตอร์</p>
+    <!-- Request Period Status -->
+    <?php if ($request_status): ?>
+    <div class="mb-4">
+        <?php if ($request_status['status'] == 'not_started'): ?>
+        <div class="alert alert-warning">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-clock text-warning me-3"></i>
+                <div>
+                    <h5 class="alert-heading">ยังไม่ถึงช่วงเวลาการขอ</h5>
+                    <p class="mb-0">
+                        การขอจะเปิดในวันที่ <?php echo formatThaiDate($request_status['request_start_date']); ?>
+                    </p>
+                </div>
+            </div>
         </div>
-
-        <!-- Request Period Status -->
-        <?php if ($request_status): ?>
-        <div class="mb-6">
-            <?php if ($request_status['status'] == 'not_started'): ?>
-            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                <div class="flex items-center">
-                    <i class="fas fa-clock text-yellow-600 mr-3"></i>
-                    <div>
-                        <h3 class="text-lg font-semibold text-yellow-900">ยังไม่ถึงช่วงเวลาการขอ</h3>
-                        <p class="text-yellow-700">
-                            การขอจะเปิดในวันที่ <?php echo formatThaiDate($request_status['request_start_date']); ?>
-                        </p>
-                    </div>
+        <?php elseif ($request_status['status'] == 'closed'): ?>
+        <div class="alert alert-danger">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-times-circle text-danger me-3"></i>
+                <div>
+                    <h5 class="alert-heading">ปิดช่วงเวลาการขอแล้ว</h5>
+                    <p class="mb-0">
+                        การขอปิดเมื่อวันที่ <?php echo formatThaiDate($request_status['request_end_date']); ?>
+                    </p>
                 </div>
             </div>
-            <?php elseif ($request_status['status'] == 'closed'): ?>
-            <div class="bg-red-50 border border-red-200 rounded-lg p-4">
-                <div class="flex items-center">
-                    <i class="fas fa-times-circle text-red-600 mr-3"></i>
-                    <div>
-                        <h3 class="text-lg font-semibold text-red-900">ปิดช่วงเวลาการขอแล้ว</h3>
-                        <p class="text-red-700">
-                            การขอปิดเมื่อวันที่ <?php echo formatThaiDate($request_status['request_end_date']); ?>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <?php else: ?>
-            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-                <div class="flex items-center">
-                    <i class="fas fa-check-circle text-green-600 mr-3"></i>
-                    <div>
-                        <h3 class="text-lg font-semibold text-green-900">ช่วงเวลาการขอเปิดอยู่</h3>
-                        <p class="text-green-700">
+        </div>
+        <?php else: ?>
+        <div class="alert alert-success">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-check-circle text-success me-3"></i>
+                <div>
+                    <h5 class="alert-heading">ช่วงเวลาการขอเปิดอยู่</h5>
+                    <p class="mb-0">
                             สามารถยื่นคำขอได้ถึงวันที่ <?php echo formatThaiDate($request_status['request_end_date']); ?>
                         </p>
                     </div>
@@ -356,5 +336,5 @@ $page_title = 'ยื่นคำขอใหม่';
             <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
     </script>
-</body>
-</html>
+
+<?php include 'includes/footer.php'; ?>
