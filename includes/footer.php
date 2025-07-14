@@ -3,22 +3,19 @@
     </div>
     
     <!-- Footer -->
-    <footer class="bg-dark text-light py-3 mt-5">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-6">
-                    <p class="mb-0">
-                        <i class="fas fa-hospital me-2"></i>
-                        ระบบจัดซื้อครุภัณฑ์คอมพิวเตอร์ - โรงพยาบาล
-                    </p>
+    <footer class="bg-gray-800 text-white py-4 mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-2 md:mb-0">
+                    <i class="fas fa-hospital mr-2"></i>
+                    <span>ระบบจัดซื้อครุภัณฑ์คอมพิวเตอร์ - โรงพยาบาล</span>
                 </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="mb-0">
-                        <i class="fas fa-user me-1"></i>
-                        <?php echo $_SESSION['user_name']; ?> | 
-                        <i class="fas fa-calendar me-1"></i>
-                        <?php echo date('d/m/Y H:i:s'); ?>
-                    </p>
+                <div class="flex items-center text-sm">
+                    <i class="fas fa-user mr-1"></i>
+                    <span><?php echo $_SESSION['user_name']; ?></span>
+                    <span class="mx-2">|</span>
+                    <i class="fas fa-calendar mr-1"></i>
+                    <span><?php echo date('d/m/Y H:i:s'); ?></span>
                 </div>
             </div>
         </div>

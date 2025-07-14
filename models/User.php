@@ -21,34 +21,68 @@ class User {
 
     public function __construct($db) {
         $this->conn = $db;
+        if (!$this->conn) {
+            throw new Exception("Database connection is null");
+        }
     }
 
     public function authenticate($username, $password) {
-        $query = "SELECT u.id, u.username, u.password_hash, u.first_name, u.last_name, 
-                         u.role_id, u.department_id, u.sub_department_id, u.is_active,
-                         r.name as role_name, d.name as department_name, sd.name as sub_department_name
-                  FROM " . $this->table_name . " u
-                  LEFT JOIN roles r ON u.role_id = r.id
-                  LEFT JOIN departments d ON u.department_id = d.id
-                  LEFT JOIN sub_departments sd ON u.sub_department_id = sd.id
-                  WHERE u.username = :username AND u.is_active = 1";
-
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':username', $username);
-        $stmt->execute();
-
+        echo "Connection in authenticate: " . ($this->conn ? "SUCCESS" : "FAILED") . "\n";
+        
+        // Simple query first to test
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE username = ?");
+        if (!$stmt) {
+            echo "Failed to prepare statement\n";
+            return false;
+        }
+        
+        $result = $stmt->execute([$username]);
+        if (!$result) {
+            echo "Failed to execute statement\n";
+            return false;
+        }
+        
+        echo "Row count in authenticate: " . $stmt->rowCount() . "\n";
+        
         if ($stmt->rowCount() > 0) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            if (password_verify($password, $row['password_hash'])) {
-                $this->updateLastLogin($row['id']);
-                return $row;
+            echo "Found user in authenticate: " . $row['username'] . "\n";
+            echo "is_active: " . $row['is_active'] . "\n";
+            echo "password_verify: " . (password_verify($password, $row['password_hash']) ? 'TRUE' : 'FALSE') . "\n";
+            
+            if ($row['is_active'] == 1 && password_verify($password, $row['password_hash'])) {
+                // Get additional info with joins
+                $query = "SELECT u.id, u.username, u.password_hash, u.first_name, u.last_name, 
+                                 u.role_id, u.department_id, u.sub_department_id, u.is_active,
+                                 r.name as role_name, d.name as department_name, sd.name as sub_department_name
+                          FROM users u
+                          LEFT JOIN roles r ON u.role_id = r.id
+                          LEFT JOIN departments d ON u.department_id = d.id
+                          LEFT JOIN sub_departments sd ON u.sub_department_id = sd.id
+                          WHERE u.username = ?";
+                
+                $stmt2 = $this->conn->prepare($query);
+                $stmt2->execute([$username]);
+                $result = $stmt2->fetch(PDO::FETCH_ASSOC);
+                
+                try {
+                    $this->updateLastLogin($row['id']);
+                } catch (Exception $e) {
+                    // If update fails, log it but don't fail authentication
+                    error_log("Failed to update last login: " . $e->getMessage());
+                }
+                return $result;
+            } else {
+                echo "Failed is_active or password check\n";
             }
+        } else {
+            echo "No rows found in authenticate\n";
         }
         return false;
     }
 
     public function updateLastLogin($user_id) {
-        $query = "UPDATE " . $this->table_name . " SET last_login = NOW() WHERE id = :user_id";
+        $query = "UPDATE " . $this->table_name . " SET last_login = CURRENT_TIMESTAMP WHERE id = :user_id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':user_id', $user_id);
         return $stmt->execute();
