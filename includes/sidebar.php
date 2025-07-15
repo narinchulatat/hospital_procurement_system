@@ -247,52 +247,7 @@ function output_layout() {
     <meta name="csrf-token" content="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
 </head>
 <body class="bg-gray-100">
-    <!-- Navigation -->
-    <nav class="bg-blue-600 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Mobile menu button -->
-                <button class="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" 
-                        type="button" id="mobile-menu-button">
-                    <i class="fas fa-bars"></i>
-                </button>
-                
-                <!-- Brand -->
-                <a href="<?php echo $base_url; ?>dashboard.php" class="flex items-center text-white hover:text-blue-200 transition-colors">
-                    <i class="fas fa-hospital mr-3 text-xl"></i>
-                    <div>
-                        <div class="font-semibold text-lg">ระบบจัดซื้อครุภัณฑ์คอมพิวเตอร์</div>
-                        <div class="text-sm text-blue-200">โรงพยาบาล</div>
-                    </div>
-                </a>
-                
-                <!-- User menu -->
-                <div class="relative">
-                    <button class="flex items-center text-white hover:bg-blue-700 px-3 py-2 rounded-md transition-colors" 
-                            type="button" id="user-menu" onclick="toggleUserMenu()">
-                        <i class="fas fa-user-circle mr-2 text-lg"></i>
-                        <div class="text-left">
-                            <div class="text-sm">สวัสดี, <?php echo $_SESSION['user_name']; ?></div>
-                            <div class="text-xs text-blue-200"><?php echo $_SESSION['user_role']; ?></div>
-                        </div>
-                        <i class="fas fa-chevron-down ml-2"></i>
-                    </button>
-                    <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                        <a href="<?php echo $base_url; ?>profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            <i class="fas fa-user mr-2"></i>ข้อมูลส่วนตัว
-                        </a>
-                        <a href="<?php echo $base_url; ?>change_password.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            <i class="fas fa-key mr-2"></i>เปลี่ยนรหัสผ่าน
-                        </a>
-                        <hr class="border-gray-200 my-1">
-                        <a href="<?php echo $base_url; ?>logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            <i class="fas fa-sign-out-alt mr-2"></i>ออกจากระบบ
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+
     
     <!-- Mobile sidebar overlay -->
     <div class="fixed inset-0 bg-gray-600 bg-opacity-50 z-40 hidden" id="sidebar-overlay"></div>
@@ -308,8 +263,8 @@ function output_layout() {
                         <i class="fas fa-hospital text-xl"></i>
                     </div>
                     <div>
-                        <div class="font-bold text-lg">Hospital System</div>
-                        <div class="text-sm text-blue-100">Procurement</div>
+                        <div class="font-bold text-lg">ระบบจัดซื้อครุภัณฑ์คอมพิวเตอร์</div>
+                        <div class="text-sm text-blue-100">โรงพยาบาล</div>
                     </div>
                 </div>
                 <button class="text-white hover:text-gray-200 transition-colors relative z-10" onclick="document.getElementById('sidebar-overlay').click()">
@@ -325,8 +280,8 @@ function output_layout() {
                             <i class="fas fa-hospital text-2xl"></i>
                         </div>
                         <div class="text-center">
-                            <div class="font-bold text-xl">Hospital</div>
-                            <div class="text-sm text-blue-100 font-medium">Procurement System</div>
+                            <div class="font-bold text-xl">ระบบจัดซื้อครุภัณฑ์คอมพิวเตอร์</div>
+                            <div class="text-sm text-blue-100 font-medium">โรงพยาบาล</div>
                         </div>
                     </div>
                 </div>
@@ -334,7 +289,7 @@ function output_layout() {
             
             <!-- User Profile Card -->
             <div class="px-4 py-6">
-                <div class="sidebar-user-card rounded-xl p-4 mb-6">
+                <div class="sidebar-user-card rounded-xl p-4 mb-6 relative">
                     <div class="flex items-center">
                         <div class="user-avatar w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
                             <?php echo strtoupper(substr($_SESSION['user_name'], 0, 1)); ?>
@@ -344,6 +299,27 @@ function output_layout() {
                             <div class="text-xs text-gray-500 capitalize"><?php echo $_SESSION['user_role']; ?></div>
                         </div>
                         <div class="status-indicator w-3 h-3 bg-green-400 rounded-full shadow-sm"></div>
+                    </div>
+                    
+                    <!-- User Menu Button -->
+                    <button class="w-full mt-4 flex items-center justify-center text-gray-600 hover:text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-lg transition-colors" 
+                            type="button" id="sidebar-user-menu" onclick="toggleSidebarUserMenu()">
+                        <i class="fas fa-chevron-down mr-2"></i>
+                        <span class="text-sm font-medium">เมนูผู้ใช้</span>
+                    </button>
+                    
+                    <!-- User Dropdown Menu -->
+                    <div id="sidebar-user-dropdown" class="hidden mt-2 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
+                        <a href="<?php echo $base_url; ?>profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-user mr-2"></i>ข้อมูลส่วนตัว
+                        </a>
+                        <a href="<?php echo $base_url; ?>change_password.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-key mr-2"></i>เปลี่ยนรหัสผ่าน
+                        </a>
+                        <hr class="border-gray-200 my-1">
+                        <a href="<?php echo $base_url; ?>logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-sign-out-alt mr-2"></i>ออกจากระบบ
+                        </a>
                     </div>
                 </div>
             </div>
@@ -474,6 +450,12 @@ function output_layout() {
         
         <!-- Main content -->
         <div class="flex-1 lg:ml-64">
+            <!-- Mobile menu button -->
+            <button class="lg:hidden fixed top-4 left-4 z-30 p-2 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition-colors" 
+                    type="button" id="mobile-sidebar-button">
+                <i class="fas fa-bars"></i>
+            </button>
+            
             <!-- Breadcrumb -->
             <nav class="bg-white border-b border-gray-200">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -657,30 +639,35 @@ function output_layout() {
     <script src="<?php echo $base_url; ?>js/main.js"></script>
     
     <script>
-        // Toggle user menu
-        function toggleUserMenu() {
-            const dropdown = document.getElementById('user-dropdown');
+        // Toggle sidebar user menu
+        function toggleSidebarUserMenu() {
+            const dropdown = document.getElementById('sidebar-user-dropdown');
             dropdown.classList.toggle('hidden');
         }
         
-        // Close user menu when clicking outside
+        // Close sidebar user menu when clicking outside
         document.addEventListener('click', function(event) {
-            const userMenu = document.getElementById('user-menu');
-            const dropdown = document.getElementById('user-dropdown');
+            const userMenu = document.getElementById('sidebar-user-menu');
+            const dropdown = document.getElementById('sidebar-user-dropdown');
             
-            if (!userMenu.contains(event.target)) {
+            if (userMenu && dropdown && !userMenu.contains(event.target) && !dropdown.contains(event.target)) {
                 dropdown.classList.add('hidden');
             }
         });
         
-        // Mobile menu toggle
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+        // Mobile sidebar toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileSidebarButton = document.getElementById('mobile-sidebar-button');
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebar-overlay');
             
-            sidebar.classList.toggle('translate-x-0');
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
+            if (mobileSidebarButton && sidebar && overlay) {
+                mobileSidebarButton.addEventListener('click', function() {
+                    sidebar.classList.toggle('translate-x-0');
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                });
+            }
         });
         
         // Close mobile menu when clicking overlay
