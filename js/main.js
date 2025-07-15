@@ -126,12 +126,12 @@ function initializeDataTables() {
 
 // Initialize mobile menu
 function initializeMobileMenu() {
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileSidebarButton = document.getElementById('mobile-sidebar-button');
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
     
-    if (mobileMenuButton && sidebar && sidebarOverlay) {
-        mobileMenuButton.addEventListener('click', function() {
+    if (mobileSidebarButton && sidebar && sidebarOverlay) {
+        mobileSidebarButton.addEventListener('click', function() {
             sidebar.classList.toggle('translate-x-0');
             sidebar.classList.toggle('-translate-x-full');
             sidebarOverlay.classList.toggle('hidden');
@@ -147,8 +147,8 @@ function initializeMobileMenu() {
 
 // Initialize user dropdown
 function initializeUserDropdown() {
-    const userMenu = document.getElementById('user-menu');
-    const userDropdown = document.getElementById('user-dropdown');
+    const userMenu = document.getElementById('sidebar-user-menu');
+    const userDropdown = document.getElementById('sidebar-user-dropdown');
     
     if (userMenu && userDropdown) {
         userMenu.addEventListener('click', function(e) {
