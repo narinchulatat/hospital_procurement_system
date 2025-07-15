@@ -456,24 +456,7 @@ function output_layout() {
                 <i class="fas fa-bars"></i>
             </button>
             
-            <!-- Breadcrumb -->
-            <nav class="bg-white border-b border-gray-200">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <ol class="flex items-center space-x-2 py-3 text-sm">
-                        <li>
-                            <a href="<?php echo $base_url; ?>dashboard.php" class="text-blue-600 hover:text-blue-800">
-                                <i class="fas fa-home"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <i class="fas fa-chevron-right text-gray-400 mx-2"></i>
-                        </li>
-                        <li class="text-gray-500">
-                            <?php echo $page_title ?? 'หน้าหลัก'; ?>
-                        </li>
-                    </ol>
-                </div>
-            </nav>
+
             
             <!-- Page content -->
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
